@@ -1,0 +1,21 @@
+{
+  "name": "kasir-frontend",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "node --experimental-require-module ./node_modules/nuxt/bin/nuxt.mjs build",
+    "dev": "node --experimental-require-module ./node_modules/nuxt/bin/nuxt.mjs dev",
+    "generate": "node --experimental-require-module ./node_modules/nuxt/bin/nuxt.mjs generate",
+    "preview": "node --experimental-require-module ./node_modules/nuxt/bin/nuxt.mjs preview",
+    "postinstall": "node --experimental-require-module ./node_modules/nuxt/bin/nuxt.mjs prepare"
+  },
+  "dependencies": {
+    "nuxt": "^4.5.1",
+    "vue": "^3.5.40",
+    "vue-router": "^5.2.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "oxc-parser": "^0.140.0"
+  }
+}
