@@ -1,46 +1,46 @@
 <template>
   <div>
-    <!-- Statistik Rekap Kasir & Settlement Laci Kas (Anti-Gimmick) -->
-    <div class="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <div class="rounded-[22px] border border-slate-200 bg-white p-5 shadow-sm">
+    <!-- Statistik Rekap Kasir & Settlement Laci Kas (Responsif Compact 2x2 di Mobile) -->
+    <div class="mb-4 grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+      <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-3 sm:p-5 shadow-sm">
         <div class="flex items-center justify-between">
-          <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Uang Fisik di Laci</p>
-          <span class="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">Tunai</span>
+          <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Laci Tunai</p>
+          <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-emerald-700">Tunai</span>
         </div>
-        <p class="mt-2 text-2xl font-black text-slate-900">Rp {{ totalTunai.toLocaleString() }}</p>
-        <p class="text-[11px] text-slate-400 mt-0.5">Uang kas kasir yang wajib ada di laci</p>
+        <p class="mt-1 sm:mt-2 text-sm sm:text-2xl font-black text-slate-900 truncate">Rp {{ totalTunai.toLocaleString() }}</p>
+        <p class="hidden sm:block text-[11px] text-slate-400 mt-0.5">Uang kas kasir di laci</p>
       </div>
 
-      <div class="rounded-[22px] border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-3 sm:p-5 shadow-sm">
         <div class="flex items-center justify-between">
-          <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Saldo Masuk QRIS</p>
-          <span class="rounded-full bg-indigo-50 px-2.5 py-0.5 text-[10px] font-bold text-indigo-700">QRIS</span>
+          <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Saldo QRIS</p>
+          <span class="rounded-full bg-indigo-50 px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-indigo-700">QRIS</span>
         </div>
-        <p class="mt-2 text-2xl font-black text-indigo-600">Rp {{ totalQris.toLocaleString() }}</p>
-        <p class="text-[11px] text-slate-400 mt-0.5">Masuk ke e-wallet / merchant</p>
+        <p class="mt-1 sm:mt-2 text-sm sm:text-2xl font-black text-indigo-600 truncate">Rp {{ totalQris.toLocaleString() }}</p>
+        <p class="hidden sm:block text-[11px] text-slate-400 mt-0.5">Masuk ke e-wallet</p>
       </div>
 
-      <div class="rounded-[22px] border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-3 sm:p-5 shadow-sm">
         <div class="flex items-center justify-between">
-          <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Saldo Bank / Debit</p>
-          <span class="rounded-full bg-blue-50 px-2.5 py-0.5 text-[10px] font-bold text-blue-700">Bank EDC</span>
+          <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Bank / VA</p>
+          <span class="rounded-full bg-blue-50 px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-blue-700">Bank</span>
         </div>
-        <p class="mt-2 text-2xl font-black text-blue-600">Rp {{ totalTransfer.toLocaleString() }}</p>
-        <p class="text-[11px] text-slate-400 mt-0.5">Rekening penampung toko</p>
+        <p class="mt-1 sm:mt-2 text-sm sm:text-2xl font-black text-blue-600 truncate">Rp {{ totalTransfer.toLocaleString() }}</p>
+        <p class="hidden sm:block text-[11px] text-slate-400 mt-0.5">Rekening penampung</p>
       </div>
 
-      <div class="rounded-[22px] border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-3 sm:p-5 shadow-sm">
         <div class="flex items-center justify-between">
-          <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Estimasi Laba Kotor</p>
-          <span class="rounded-full bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold text-amber-800">Margin</span>
+          <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Laba Kotor</p>
+          <span class="rounded-full bg-amber-50 px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-amber-800">Margin</span>
         </div>
-        <p class="mt-2 text-2xl font-black text-emerald-600">Rp {{ totalLabaKotor.toLocaleString() }}</p>
-        <p class="text-[11px] text-slate-400 mt-0.5">Total Omzet - HPP Modal</p>
+        <p class="mt-1 sm:mt-2 text-sm sm:text-2xl font-black text-emerald-600 truncate">Rp {{ totalLabaKotor.toLocaleString() }}</p>
+        <p class="hidden sm:block text-[11px] text-slate-400 mt-0.5">Omzet - HPP Modal</p>
       </div>
     </div>
 
     <!-- Kontainer Riwayat Transaksi -->
-    <div class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="rounded-[28px] border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-4">
         <div>
           <h2 class="text-xl font-bold text-slate-900">Arsip Transaksi & Bukti Bayar</h2>
@@ -211,7 +211,7 @@
 
     <!-- Modal Cetak Struk Riwayat -->
     <div v-if="showStruk" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4">
-      <div class="print-receipt-shell w-full max-w-sm rounded-[28px] bg-white p-6 shadow-2xl">
+      <div class="print-receipt-shell w-full max-w-sm max-h-[90vh] overflow-y-auto rounded-[28px] bg-white p-5 sm:p-6 shadow-2xl">
         <div class="border-b border-dashed border-slate-300 pb-3 text-center">
           <h3 class="text-lg font-bold text-slate-900">TOKO SEJAHTRA</h3>
           <p class="text-xs text-slate-500">Jl. Sejahtera No. 1</p>

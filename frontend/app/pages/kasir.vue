@@ -1,50 +1,74 @@
 <template>
   <div>
-    <!-- Statistik Ringkas Kasir -->
-    <div class="mb-6 grid gap-4 sm:grid-cols-3">
-      <div class="rounded-[22px] border border-slate-200 bg-white p-5 shadow-sm">
-        <p class="text-sm font-medium text-slate-500">Status Produk</p>
-        <div class="mt-3 flex items-end justify-between">
+    <!-- Statistik Ringkas Kasir (Responsif Compact di Mobile) -->
+    <div class="mb-4 grid grid-cols-3 gap-2 sm:gap-4">
+      <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-2.5 sm:p-5 shadow-sm">
+        <p class="text-[10px] sm:text-sm font-medium text-slate-500">Produk</p>
+        <div class="mt-1 sm:mt-3 flex items-end justify-between">
           <div>
-            <p class="text-2xl font-bold text-slate-900">{{ daftarBarang.length }}</p>
-            <p class="text-xs text-slate-500">Item terdaftar</p>
+            <p class="text-base sm:text-2xl font-bold text-slate-900">{{ daftarBarang.length }}</p>
+            <p class="hidden sm:block text-xs text-slate-500">Item terdaftar</p>
           </div>
-          <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">Aktif</span>
+          <span class="rounded-full bg-emerald-50 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold text-emerald-700">Aktif</span>
         </div>
       </div>
-      <div class="rounded-[22px] border border-slate-200 bg-white p-5 shadow-sm">
-        <p class="text-sm font-medium text-slate-500">Isi Keranjang</p>
-        <div class="mt-3 flex items-end justify-between">
+      <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-2.5 sm:p-5 shadow-sm">
+        <p class="text-[10px] sm:text-sm font-medium text-slate-500">Keranjang</p>
+        <div class="mt-1 sm:mt-3 flex items-end justify-between">
           <div>
-            <p class="text-2xl font-bold text-slate-900">{{ totalItemQty }}</p>
-            <p class="text-xs text-slate-500">{{ keranjang.length }} jenis barang</p>
+            <p class="text-base sm:text-2xl font-bold text-indigo-600">{{ totalItemQty }}</p>
+            <p class="hidden sm:block text-xs text-slate-500">{{ keranjang.length }} jenis barang</p>
           </div>
-          <span class="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">Transaksi Aktif</span>
+          <span class="rounded-full bg-indigo-50 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold text-indigo-700">{{ keranjang.length }} item</span>
         </div>
       </div>
-      <div class="rounded-[22px] border border-slate-200 bg-white p-5 shadow-sm">
-        <p class="text-sm font-medium text-slate-500">Total Tagihan Bersih</p>
-        <div class="mt-3 flex items-end justify-between">
-          <div>
-            <p class="text-2xl font-bold text-indigo-600">Rp {{ totalTagihan.toLocaleString() }}</p>
-            <p class="text-xs text-slate-500">
+      <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-2.5 sm:p-5 shadow-sm">
+        <p class="text-[10px] sm:text-sm font-medium text-slate-500">Tagihan</p>
+        <div class="mt-1 sm:mt-3 flex items-end justify-between">
+          <div class="min-w-0">
+            <p class="text-sm sm:text-2xl font-bold text-indigo-600 truncate">Rp {{ totalTagihan.toLocaleString() }}</p>
+            <p class="hidden sm:block text-xs text-slate-500">
               {{ diskonNominal > 0 ? `Hemat Rp ${diskonNominal.toLocaleString()}` : 'Belum ada diskon' }}
             </p>
           </div>
           <span
             :class="statusBayarValid ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'"
-            class="rounded-full px-3 py-1 text-xs font-semibold"
+            class="rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold shrink-0"
           >
-            {{ statusBayarValid ? 'Siap Bayar' : 'Menunggu' }}
+            {{ statusBayarValid ? 'Siap' : 'Tunggu' }}
           </span>
         </div>
       </div>
     </div>
 
+    <!-- Segmented Tab Switcher Khusus Layar Mobile (< xl) -->
+    <div class="mb-4 grid grid-cols-2 rounded-2xl bg-slate-200/80 p-1 font-semibold text-xs text-slate-600 xl:hidden shadow-inner">
+      <button
+        type="button"
+        @click="mobileActiveTab = 'katalog'"
+        :class="mobileActiveTab === 'katalog' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-slate-600 hover:text-slate-900'"
+        class="flex items-center justify-center gap-1.5 rounded-xl py-2.5 transition"
+      >
+        <span>📦 Katalog ({{ tampilBarang.length }})</span>
+      </button>
+      <button
+        type="button"
+        @click="mobileActiveTab = 'keranjang'"
+        :class="mobileActiveTab === 'keranjang' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-slate-600 hover:text-slate-900'"
+        class="relative flex items-center justify-center gap-1.5 rounded-xl py-2.5 transition"
+      >
+        <span>🛒 Keranjang ({{ totalItemQty }})</span>
+        <span v-if="keranjang.length > 0" class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      </button>
+    </div>
+
     <!-- Grid Utama: Katalog Produk (Kiri) & Keranjang Kasir (Kanan) -->
     <div class="grid gap-6 xl:grid-cols-[1.45fr_1.05fr]">
       <!-- Katalog Produk -->
-      <section class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
+      <section
+        :class="mobileActiveTab === 'katalog' ? 'block' : 'hidden xl:block'"
+        class="rounded-[28px] border border-slate-200 bg-white p-4 sm:p-5 shadow-sm"
+      >
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 class="text-xl font-bold text-slate-900">Katalog Produk</h2>
@@ -126,7 +150,10 @@
       </section>
 
       <!-- Sidebar Kasir: Keranjang, Pelanggan, & Pembayaran Riil -->
-      <aside class="space-y-4">
+      <aside
+        :class="mobileActiveTab === 'keranjang' ? 'block' : 'hidden xl:block'"
+        class="space-y-4"
+      >
         <!-- Rincian Keranjang -->
         <div class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -351,9 +378,33 @@
       </aside>
     </div>
 
+    <!-- Floating Bottom Bar Mobile (Saat di tab katalog & ada item keranjang) -->
+    <div
+      v-if="mobileActiveTab === 'katalog' && keranjang.length > 0"
+      class="fixed bottom-16 inset-x-3 z-30 xl:hidden animate-in slide-in-from-bottom-2 duration-200"
+    >
+      <button
+        @click="mobileActiveTab = 'keranjang'"
+        class="w-full flex items-center justify-between rounded-2xl bg-slate-900 px-4 py-3 text-white shadow-2xl shadow-slate-900/50 border border-slate-800 active:scale-[0.98] transition"
+      >
+        <div class="flex items-center gap-2.5">
+          <span class="flex h-7 w-7 items-center justify-center rounded-xl bg-indigo-600 text-xs font-bold text-white shadow-sm">
+            {{ totalItemQty }}
+          </span>
+          <div class="text-left leading-tight">
+            <p class="text-xs font-bold text-white">Rp {{ totalTagihan.toLocaleString() }}</p>
+            <p class="text-[10px] text-slate-400">{{ keranjang.length }} item di keranjang</p>
+          </div>
+        </div>
+        <span class="flex items-center gap-1 text-xs font-bold text-indigo-300">
+          Bayar Sekarang →
+        </span>
+      </button>
+    </div>
+
     <!-- Modal Konfirmasi Pembayaran -->
     <div v-if="showKonfirmasi" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" @click.self="showKonfirmasi = false">
-      <div class="w-full max-w-lg rounded-[28px] bg-white p-6 shadow-2xl">
+      <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[28px] bg-white p-5 sm:p-6 shadow-2xl">
         <h3 class="text-xl font-bold text-slate-900">Konfirmasi Transaksi Kasir</h3>
         <p class="mt-1 text-xs text-slate-500">Periksa detail pesanan pelanggan sebelum menyimpan transaksi.</p>
 
@@ -421,7 +472,7 @@
 
     <!-- Modal Monitoring & Simulasi Pembayaran Midtrans Snap -->
     <div v-if="showSnapModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div class="w-full max-w-md rounded-[28px] bg-white p-6 shadow-2xl border border-indigo-100 animate-in fade-in zoom-in-95 duration-200">
+      <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-[28px] bg-white p-5 sm:p-6 shadow-2xl border border-indigo-100 animate-in fade-in zoom-in-95 duration-200">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <div class="flex items-center gap-2.5">
             <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 text-lg font-bold">
@@ -491,7 +542,7 @@
 
     <!-- Modal Struk Pembayaran -->
     <div v-if="showStruk" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4">
-      <div class="print-receipt-shell w-full max-w-sm rounded-[28px] bg-white p-6 shadow-2xl">
+      <div class="print-receipt-shell w-full max-w-sm max-h-[90vh] overflow-y-auto rounded-[28px] bg-white p-5 sm:p-6 shadow-2xl">
         <div class="text-center border-b border-dashed border-slate-300 pb-3">
           <h3 class="text-lg font-bold text-slate-900">TOKO SEJAHTRA</h3>
           <p class="text-xs text-slate-500">Jl. Sejahtera No. 1</p>
@@ -607,6 +658,7 @@ const selectedCategory = ref('all')
 
 const daftarBarang = ref([])
 const keranjang = ref([])
+const mobileActiveTab = ref('katalog')
 
 // Pelanggan & Diskon
 const namaPelanggan = ref('Pelanggan Umum')

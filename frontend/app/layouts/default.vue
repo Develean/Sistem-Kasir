@@ -1,59 +1,113 @@
 <template>
-  <div class="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.14),_transparent_30%),linear-gradient(135deg,_#f8fafc_0%,_#eef2ff_100%)] p-4 sm:p-6 lg:p-8">
-    <!-- Header Navigasi Terpusat -->
-    <header class="mb-6 flex flex-col gap-4 rounded-[24px] border border-slate-200 bg-slate-900 p-4 text-white shadow-[0_20px_60px_-20px_rgba(15,23,42,0.45)] md:flex-row md:items-center md:justify-between md:p-6">
-      <div class="flex items-center gap-3">
-        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/20 text-2xl shadow-inner">
-          🛒
+  <div class="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.14),_transparent_30%),linear-gradient(135deg,_#f8fafc_0%,_#eef2ff_100%)] p-3 sm:p-6 lg:p-8 pb-28 md:pb-8">
+    <!-- Header Navigasi Desktop & Tablet -->
+    <header class="mb-4 sm:mb-6 rounded-[22px] sm:rounded-[26px] border border-slate-800 bg-slate-900 p-3.5 sm:p-5 text-white shadow-[0_20px_50px_-20px_rgba(15,23,42,0.45)]">
+      <div class="flex items-center justify-between">
+        <!-- Logo & Identitas Toko -->
+        <div class="flex items-center gap-2.5 sm:gap-3.5">
+          <div class="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl sm:rounded-2xl bg-indigo-500/20 text-xl sm:text-2xl shadow-inner">
+            🛒
+          </div>
+          <div>
+            <h1 class="text-base sm:text-xl font-bold tracking-tight text-white leading-tight">TOKO SEJAHTRA</h1>
+            <p class="text-[10px] sm:text-xs text-indigo-300 font-medium">Sistem Kasir & Point of Sales</p>
+          </div>
         </div>
-        <div>
-          <h1 class="text-xl font-bold tracking-tight text-white sm:text-2xl">TOKO SEJAHTRA</h1>
-          <p class="text-xs text-indigo-300 font-medium">Sistem Kasir & Point of Sales</p>
+
+        <!-- Menu Navigasi Desktop (hidden di mobile) -->
+        <nav class="hidden md:flex items-center gap-2 lg:gap-3">
+          <NuxtLink
+            to="/kasir"
+            :class="route.path === '/kasir' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
+            class="rounded-full px-4 py-2 text-sm font-semibold transition"
+          >
+            Halaman Kasir
+          </NuxtLink>
+          <NuxtLink
+            to="/barang"
+            :class="route.path === '/barang' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
+            class="rounded-full px-4 py-2 text-sm font-semibold transition"
+          >
+            Kelola Barang
+          </NuxtLink>
+          <NuxtLink
+            to="/riwayat"
+            :class="route.path === '/riwayat' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
+            class="rounded-full px-4 py-2 text-sm font-semibold transition"
+          >
+            Riwayat Transaksi
+          </NuxtLink>
+
+          <!-- Kasir Profile Pill -->
+          <div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300">
+            <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>{{ userName }}</span>
+          </div>
+
+          <button
+            @click="handleLogout"
+            class="rounded-full bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-500 active:scale-95 shadow-sm"
+          >
+            Logout
+          </button>
+        </nav>
+
+        <!-- Right Action Mobile: User info & Logout -->
+        <div class="flex md:hidden items-center gap-2">
+          <span class="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-300 flex items-center gap-1.5">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+            <span class="max-w-[80px] truncate">{{ userName }}</span>
+          </span>
+          <button
+            @click="handleLogout"
+            title="Keluar Akun"
+            class="rounded-xl bg-rose-600/90 p-2 text-xs font-semibold text-white transition hover:bg-rose-500 active:scale-95"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </button>
         </div>
       </div>
-
-      <nav class="flex flex-wrap items-center gap-2 sm:gap-3">
-        <NuxtLink
-          to="/kasir"
-          :class="route.path === '/kasir' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
-          class="rounded-full px-4 py-2 text-sm font-semibold transition"
-        >
-          Halaman Kasir
-        </NuxtLink>
-        <NuxtLink
-          to="/barang"
-          :class="route.path === '/barang' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
-          class="rounded-full px-4 py-2 text-sm font-semibold transition"
-        >
-          Kelola Barang
-        </NuxtLink>
-        <NuxtLink
-          to="/riwayat"
-          :class="route.path === '/riwayat' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
-          class="rounded-full px-4 py-2 text-sm font-semibold transition"
-        >
-          Riwayat Transaksi
-        </NuxtLink>
-
-        <!-- User profile indicator -->
-        <div class="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 md:flex">
-          <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
-          <span>{{ userName }}</span>
-        </div>
-
-        <button
-          @click="handleLogout"
-          class="rounded-full bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-500 active:scale-95 shadow-sm"
-        >
-          Logout
-        </button>
-      </nav>
     </header>
 
     <!-- Konten Halaman -->
     <main>
       <slot />
     </main>
+
+    <!-- Bottom Navigation Bar Khusus Mobile (< md) -->
+    <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-slate-800 bg-slate-900/95 backdrop-blur-md px-3 py-2 flex items-center justify-around shadow-2xl md:hidden">
+      <NuxtLink
+        to="/kasir"
+        :class="route.path === '/kasir' ? 'text-indigo-400 font-bold' : 'text-slate-400 font-medium hover:text-slate-200'"
+        class="flex flex-col items-center gap-1 px-3 py-1 text-[11px] transition relative"
+      >
+        <span class="text-xl">🛒</span>
+        <span>Kasir</span>
+        <span v-if="route.path === '/kasir'" class="absolute -bottom-1 h-1 w-6 rounded-full bg-indigo-500"></span>
+      </NuxtLink>
+
+      <NuxtLink
+        to="/barang"
+        :class="route.path === '/barang' ? 'text-indigo-400 font-bold' : 'text-slate-400 font-medium hover:text-slate-200'"
+        class="flex flex-col items-center gap-1 px-3 py-1 text-[11px] transition relative"
+      >
+        <span class="text-xl">📦</span>
+        <span>Barang</span>
+        <span v-if="route.path === '/barang'" class="absolute -bottom-1 h-1 w-6 rounded-full bg-indigo-500"></span>
+      </NuxtLink>
+
+      <NuxtLink
+        to="/riwayat"
+        :class="route.path === '/riwayat' ? 'text-indigo-400 font-bold' : 'text-slate-400 font-medium hover:text-slate-200'"
+        class="flex flex-col items-center gap-1 px-3 py-1 text-[11px] transition relative"
+      >
+        <span class="text-xl">📜</span>
+        <span>Riwayat</span>
+        <span v-if="route.path === '/riwayat'" class="absolute -bottom-1 h-1 w-6 rounded-full bg-indigo-500"></span>
+      </NuxtLink>
+    </nav>
   </div>
 </template>
 

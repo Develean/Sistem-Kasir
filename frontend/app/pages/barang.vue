@@ -1,55 +1,64 @@
 <template>
   <div>
-    <!-- Kartu Ringkasan Inventaris -->
-    <div class="mb-6 grid gap-4 sm:grid-cols-3">
-      <div class="rounded-[22px] border border-slate-200 bg-white p-5 shadow-sm">
-        <p class="text-sm font-medium text-slate-500">Total Jenis Barang</p>
-        <div class="mt-3 flex items-end justify-between">
+    <!-- Kartu Ringkasan Inventaris (Responsif Compact di Mobile) -->
+    <div class="mb-4 grid grid-cols-3 gap-2 sm:gap-4">
+      <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-2.5 sm:p-5 shadow-sm">
+        <p class="text-[10px] sm:text-sm font-medium text-slate-500">Jenis Barang</p>
+        <div class="mt-1 sm:mt-3 flex items-end justify-between">
           <div>
-            <p class="text-2xl font-bold text-slate-900">{{ barangList.length }}</p>
-            <p class="text-xs text-slate-500">Item terdaftar</p>
+            <p class="text-base sm:text-2xl font-bold text-slate-900">{{ barangList.length }}</p>
+            <p class="hidden sm:block text-xs text-slate-500">Item terdaftar</p>
           </div>
-          <span class="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">Database</span>
+          <span class="rounded-full bg-indigo-50 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold text-indigo-700">Data</span>
         </div>
       </div>
-      <div class="rounded-[22px] border border-slate-200 bg-white p-5 shadow-sm">
-        <p class="text-sm font-medium text-slate-500">Total Stok Fisik</p>
-        <div class="mt-3 flex items-end justify-between">
+      <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-2.5 sm:p-5 shadow-sm">
+        <p class="text-[10px] sm:text-sm font-medium text-slate-500">Stok Fisik</p>
+        <div class="mt-1 sm:mt-3 flex items-end justify-between">
           <div>
-            <p class="text-2xl font-bold text-slate-900">{{ totalStokUnit }}</p>
-            <p class="text-xs text-slate-500">Unit siap dijual</p>
+            <p class="text-base sm:text-2xl font-bold text-slate-900">{{ totalStokUnit }}</p>
+            <p class="hidden sm:block text-xs text-slate-500">Unit siap dijual</p>
           </div>
-          <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">Tersedia</span>
+          <span class="rounded-full bg-emerald-50 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold text-emerald-700">Ready</span>
         </div>
       </div>
-      <div class="rounded-[22px] border border-slate-200 bg-white p-5 shadow-sm">
-        <p class="text-sm font-medium text-slate-500">Peringatan Stok Rendah</p>
-        <div class="mt-3 flex items-end justify-between">
+      <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-2.5 sm:p-5 shadow-sm">
+        <p class="text-[10px] sm:text-sm font-medium text-slate-500">Stok Kritis</p>
+        <div class="mt-1 sm:mt-3 flex items-end justify-between">
           <div>
-            <p class="text-2xl font-bold text-rose-600">{{ stokMenipisCount }}</p>
-            <p class="text-xs text-slate-500">Stok ≤ 5 unit</p>
+            <p class="text-base sm:text-2xl font-bold text-rose-600">{{ stokMenipisCount }}</p>
+            <p class="hidden sm:block text-xs text-slate-500">Stok ≤ 5 unit</p>
           </div>
-          <span :class="stokMenipisCount > 0 ? 'bg-rose-50 text-rose-700' : 'bg-slate-100 text-slate-600'" class="rounded-full px-3 py-1 text-xs font-semibold">
-            {{ stokMenipisCount > 0 ? 'Perlu Restock' : 'Aman' }}
+          <span :class="stokMenipisCount > 0 ? 'bg-rose-50 text-rose-700' : 'bg-slate-100 text-slate-600'" class="rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold">
+            {{ stokMenipisCount > 0 ? 'Kritis' : 'Aman' }}
           </span>
         </div>
       </div>
     </div>
 
     <!-- Bagian Utama: Form Tambah & Tabel Kelola Barang -->
-    <div class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="rounded-[28px] border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-4">
         <div>
-          <h2 class="text-xl font-bold text-slate-900">Katalog Barang Toko</h2>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900">Katalog Barang Toko</h2>
           <p class="text-xs text-slate-500">Tambah barang baru, perbarui stok, dan atur harga jual & harga modal</p>
         </div>
-        <div class="rounded-full bg-slate-100 px-3.5 py-1 text-xs font-semibold text-slate-600">
-          {{ filteredBarangList.length }} barang ditemukan
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            @click="showFormTambah = !showFormTambah"
+            class="rounded-xl bg-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-indigo-500 active:scale-95 flex items-center gap-1.5"
+          >
+            <span>{{ showFormTambah ? '✕ Tutup Form' : '+ Tambah Barang' }}</span>
+          </button>
+          <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+            {{ filteredBarangList.length }} barang
+          </div>
         </div>
       </div>
 
-      <!-- Form Tambah Barang Baru -->
-      <form @submit.prevent="simpanBarang" class="mt-6 grid gap-3 rounded-[24px] border border-slate-200 bg-slate-50/80 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 items-end">
+      <!-- Form Tambah Barang Baru (Toggleable) -->
+      <form v-show="showFormTambah" @submit.prevent="simpanBarang" class="mt-4 grid gap-3 rounded-[24px] border border-slate-200 bg-slate-50/80 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 items-end animate-in fade-in duration-200">
         <div>
           <label class="mb-1.5 block text-xs font-bold text-slate-700">Kode Barang *</label>
           <input
@@ -230,7 +239,7 @@
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
       @click.self="showRestockModal = false"
     >
-      <div class="w-full max-w-sm rounded-[28px] bg-white p-6 shadow-2xl">
+      <div class="w-full max-w-sm max-h-[90vh] overflow-y-auto rounded-[28px] bg-white p-5 sm:p-6 shadow-2xl">
         <h3 class="text-lg font-bold text-slate-900">+ Restock Masuk Barang</h3>
         <p class="mt-1 text-xs text-slate-500">
           Tambah stok fisik untuk <span class="font-bold text-slate-800">{{ selectedRestockBarang?.nama_barang }}</span>.
@@ -287,7 +296,7 @@
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
       @click.self="tutupEditForm"
     >
-      <div class="w-full max-w-md rounded-[28px] bg-white p-6 shadow-2xl">
+      <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-[28px] bg-white p-5 sm:p-6 shadow-2xl">
         <h3 class="text-lg font-bold text-slate-900">Edit Data Barang</h3>
         <p class="mt-1 text-xs text-slate-500">Perbarui harga, stok, atau kategori produk ini.</p>
 
@@ -382,6 +391,7 @@ const { show: showToast } = useToast()
 const barangList = ref([])
 const searchKeyword = ref('')
 const filterKategori = ref('all')
+const showFormTambah = ref(false)
 
 const form = ref({
   kode_barang: '',
