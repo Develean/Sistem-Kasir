@@ -244,76 +244,29 @@
           <div class="mt-4 space-y-4">
             <div>
               <label class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">Pilih Metode Pembayaran</label>
-              <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                <button
-                  type="button"
-                  @click="pilihMetode('midtrans')"
-                  :class="paymentMethod === 'midtrans' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold ring-2 ring-indigo-200' : 'border-slate-200 bg-slate-50 text-slate-700 font-medium'"
-                  class="flex items-center justify-center gap-1.5 rounded-xl border p-2.5 text-xs transition"
-                >
-                  <span class="text-amber-500 font-extrabold">⚡</span>
-                  <span>Midtrans</span>
-                </button>
+              <div class="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   @click="pilihMetode('tunai')"
                   :class="paymentMethod === 'tunai' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold ring-2 ring-indigo-200' : 'border-slate-200 bg-slate-50 text-slate-700 font-medium'"
-                  class="flex items-center justify-center gap-1.5 rounded-xl border p-2.5 text-xs transition"
+                  class="flex items-center justify-center gap-1.5 rounded-xl border p-3 text-xs transition"
                 >
-                  <span>💵 Tunai</span>
+                  <span>💵 Tunai (Cash)</span>
                 </button>
                 <button
                   type="button"
-                  @click="pilihMetode('qris')"
-                  :class="paymentMethod === 'qris' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold ring-2 ring-indigo-200' : 'border-slate-200 bg-slate-50 text-slate-700 font-medium'"
-                  class="flex items-center justify-center gap-1.5 rounded-xl border p-2.5 text-xs transition"
+                  @click="pilihMetode('midtrans')"
+                  :class="paymentMethod === 'midtrans' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold ring-2 ring-indigo-200' : 'border-slate-200 bg-slate-50 text-slate-700 font-medium'"
+                  class="flex items-center justify-center gap-1.5 rounded-xl border p-3 text-xs transition"
                 >
-                  <span>📱 QRIS Statis</span>
+                  <span class="text-amber-500 font-extrabold text-sm">⚡</span>
+                  <span>Midtrans Gateway</span>
                 </button>
-                <button
-                  type="button"
-                  @click="pilihMetode('transfer')"
-                  :class="paymentMethod === 'transfer' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold ring-2 ring-indigo-200' : 'border-slate-200 bg-slate-50 text-slate-700 font-medium'"
-                  class="flex items-center justify-center gap-1.5 rounded-xl border p-2.5 text-xs transition"
-                >
-                  <span>💳 EDC / Bank</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- DETAIL METODE: MIDTRANS SNAP GATEWAY -->
-            <div v-if="paymentMethod === 'midtrans'" class="space-y-3 rounded-2xl bg-indigo-50/70 p-3.5 border border-indigo-200">
-              <div class="flex items-center justify-between border-b border-indigo-100 pb-2 text-xs">
-                <div class="flex items-center gap-2">
-                  <span class="font-bold text-indigo-950 flex items-center gap-1.5">
-                    <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Midtrans Snap Gateway
-                  </span>
-                  <span class="rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-bold text-indigo-700">Sandbox</span>
-                </div>
-                <span class="text-[11px] font-medium text-emerald-700 font-semibold">Otomatis / Real-Time</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Pelanggan membayar via <strong>QRIS (GoPay, Dana, ShopeePay, OVO)</strong>, <strong>Virtual Account (BCA, Mandiri, BRI, BNI)</strong>, atau Kartu Kredit/Debit melalui popup resmi Midtrans.
-              </p>
-
-              <div class="flex flex-wrap gap-1.5 pt-0.5">
-                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">QRIS Dinamis</span>
-                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">BCA VA</span>
-                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">Mandiri VA</span>
-                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">BRI / BNI VA</span>
-                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">GoPay / ShopeePay</span>
-              </div>
-
-              <div class="rounded-xl bg-white p-2.5 border border-indigo-100 flex justify-between items-center text-xs">
-                <span class="text-slate-500">Total Ditagihkan:</span>
-                <span class="font-extrabold text-indigo-700 text-sm">Rp {{ totalTagihan.toLocaleString() }} (Pas)</span>
               </div>
             </div>
 
             <!-- DETAIL METODE: TUNAI -->
-            <div v-else-if="paymentMethod === 'tunai'" class="space-y-3 rounded-2xl bg-slate-50 p-3.5 border border-slate-200">
+            <div v-if="paymentMethod === 'tunai'" class="space-y-3 rounded-2xl bg-slate-50 p-3.5 border border-slate-200">
               <div class="flex items-center justify-between">
                 <label class="block text-xs font-bold text-slate-700">Uang Tunai Diterima</label>
                 <button
@@ -354,90 +307,34 @@
               </div>
             </div>
 
-            <!-- DETAIL METODE: QRIS DINAMIS -->
-            <div v-else-if="paymentMethod === 'qris'" class="space-y-3 rounded-2xl bg-indigo-50/50 p-3.5 border border-indigo-200 text-center">
+            <!-- DETAIL METODE: MIDTRANS SNAP GATEWAY -->
+            <div v-else-if="paymentMethod === 'midtrans'" class="space-y-3 rounded-2xl bg-indigo-50/70 p-3.5 border border-indigo-200">
               <div class="flex items-center justify-between border-b border-indigo-100 pb-2 text-xs">
-                <span class="font-bold text-indigo-900">QRIS Standar Nasional</span>
-                <span class="rounded bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
-                  {{ qrisVerified ? '✓ Terverifikasi Lunas' : 'Menunggu Scan' }}
-                </span>
-              </div>
-
-              <!-- Visual QR Code Dinamis -->
-              <div class="flex flex-col items-center justify-center p-2 bg-white rounded-xl border border-indigo-100 shadow-inner">
-                <div class="relative flex items-center justify-center p-3">
-                  <!-- SVG Mock QR Code Generator -->
-                  <svg class="h-36 w-36 text-slate-900" viewBox="0 0 100 100" fill="currentColor">
-                    <path d="M0,0 h30 v30 h-30 z M5,5 v20 h20 v-20 z M10,10 h10 v10 h-10 z" />
-                    <path d="M70,0 h30 v30 h-30 z M75,5 v20 h20 v-20 z M80,10 h10 v10 h-10 z" />
-                    <path d="M0,70 h30 v30 h-30 z M5,75 v20 h20 v-20 z M10,80 h10 v10 h-10 z" />
-                    <rect x="40" y="10" width="8" height="8" />
-                    <rect x="52" y="10" width="6" height="15" />
-                    <rect x="40" y="25" width="18" height="6" />
-                    <rect x="10" y="40" width="15" height="6" />
-                    <rect x="30" y="40" width="8" height="18" />
-                    <rect x="45" y="40" width="10" height="10" />
-                    <rect x="65" y="40" width="25" height="8" />
-                    <rect x="10" y="55" width="12" height="6" />
-                    <rect x="60" y="55" width="10" height="18" />
-                    <rect x="75" y="55" width="15" height="15" />
-                    <rect x="40" y="70" width="8" height="20" />
-                    <rect x="55" y="80" width="15" height="10" />
-                    <rect x="80" y="80" width="10" height="10" />
-                  </svg>
-                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <span class="rounded bg-white px-1 py-0.5 text-[8px] font-black tracking-tighter text-rose-600 shadow">
-                      QRIS
-                    </span>
-                  </div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-indigo-950 flex items-center gap-1.5">
+                    <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Midtrans Snap Gateway
+                  </span>
+                  <span class="rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-bold text-indigo-700">Sandbox</span>
                 </div>
-                <p class="text-[11px] font-bold text-slate-800">TOKO SEJAHTRA</p>
-                <p class="text-[10px] text-slate-500 font-mono">NMID: ID1020268849102</p>
-                <p class="mt-1 text-sm font-extrabold text-indigo-700">Rp {{ totalTagihan.toLocaleString() }}</p>
-                <p class="text-[10px] font-mono text-slate-400">RRN: {{ qrisRefNumber }}</p>
+                <span class="text-[11px] font-medium text-emerald-700 font-semibold">Otomatis / Real-Time</span>
               </div>
 
-              <button
-                type="button"
-                @click="verifikasiQris"
-                :class="qrisVerified ? 'bg-emerald-600 text-white' : 'bg-indigo-600 text-white hover:bg-indigo-700'"
-                class="w-full rounded-xl py-2 text-xs font-bold transition shadow-sm"
-              >
-                {{ qrisVerified ? '✓ Pembayaran QRIS Sukses Diverifikasi' : 'Simulasi Pembeli Telah Scan & Bayar' }}
-              </button>
-            </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Pelanggan membayar via <strong>QRIS (GoPay, Dana, ShopeePay, OVO)</strong>, <strong>Virtual Account (BCA, Mandiri, BRI, BNI)</strong>, atau Kartu Kredit/Debit melalui popup resmi Midtrans.
+              </p>
 
-            <!-- DETAIL METODE: TRANSFER / KARTU DEBIT -->
-            <div v-else-if="paymentMethod === 'transfer'" class="space-y-3 rounded-2xl bg-slate-50 p-3.5 border border-slate-200">
-              <div>
-                <label class="mb-1 block text-xs font-bold text-slate-700">Pilih Bank / Mesin EDC</label>
-                <div class="grid grid-cols-3 gap-1.5">
-                  <button
-                    v-for="b in ['BCA', 'Mandiri', 'BRI', 'BNI', 'Seabank', 'Jago']"
-                    :key="b"
-                    type="button"
-                    @click="selectedBank = b"
-                    :class="selectedBank === b ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold' : 'border-slate-200 bg-white text-slate-700 font-medium'"
-                    class="rounded-lg border p-1.5 text-center text-xs transition"
-                  >
-                    {{ b }}
-                  </button>
-                </div>
+              <div class="flex flex-wrap gap-1.5 pt-0.5">
+                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">QRIS Dinamis</span>
+                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">BCA VA</span>
+                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">Mandiri VA</span>
+                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">BRI / BNI VA</span>
+                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">GoPay / ShopeePay</span>
               </div>
 
-              <div>
-                <label class="mb-1 block text-xs font-bold text-slate-700">Nomor Referensi / 4 Digit Kartu *</label>
-                <input
-                  v-model="transferRefNumber"
-                  type="text"
-                  placeholder="Misal: REF-884920 atau Kartu ...1234"
-                  class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-mono text-slate-800 outline-none focus:border-indigo-500"
-                />
-              </div>
-
-              <div class="rounded-xl bg-white p-2.5 border border-slate-200 flex justify-between items-center text-xs">
-                <span class="text-slate-500">Nominal Transfer:</span>
-                <span class="font-bold text-slate-900">Rp {{ totalTagihan.toLocaleString() }} (Pas)</span>
+              <div class="rounded-xl bg-white p-2.5 border border-indigo-100 flex justify-between items-center text-xs">
+                <span class="text-slate-500">Total Ditagihkan:</span>
+                <span class="font-extrabold text-indigo-700 text-sm">Rp {{ totalTagihan.toLocaleString() }} (Pas)</span>
               </div>
             </div>
           </div>
@@ -468,12 +365,8 @@
           <div class="flex justify-between">
             <span class="font-semibold">Metode:</span>
             <span class="font-bold uppercase text-indigo-700">
-              {{ paymentMethod }} {{ selectedBank ? `(${selectedBank})` : '' }}
+              {{ paymentMethod === 'midtrans' ? 'Midtrans (QRIS/VA)' : 'Tunai' }}
             </span>
-          </div>
-          <div v-if="activeRefNumber" class="flex justify-between font-mono">
-            <span>No. Referensi:</span>
-            <span class="font-bold text-slate-900">{{ activeRefNumber }}</span>
           </div>
         </div>
 
@@ -722,10 +615,6 @@ const diskonNominal = ref(0)
 // Metode Pembayaran
 const paymentMethod = ref('tunai')
 const bayar = ref(0)
-const selectedBank = ref('BCA')
-const transferRefNumber = ref('')
-const qrisRefNumber = ref('')
-const qrisVerified = ref(false)
 
 const showKonfirmasi = ref(false)
 const showStruk = ref(false)
@@ -771,21 +660,7 @@ const statusBayarValid = computed(() => {
     return bayar.value >= totalTagihan.value
   }
 
-  if (paymentMethod.value === 'qris') {
-    return qrisVerified.value === true
-  }
-
-  if (paymentMethod.value === 'transfer') {
-    return String(transferRefNumber.value || '').trim().length >= 3
-  }
-
   return false
-})
-
-const activeRefNumber = computed(() => {
-  if (paymentMethod.value === 'qris') return qrisRefNumber.value
-  if (paymentMethod.value === 'transfer') return transferRefNumber.value
-  return null
 })
 
 const categories = computed(() => {
@@ -818,22 +693,7 @@ const pilihMetode = (metode) => {
     bayar.value = totalTagihan.value
   } else if (metode === 'tunai') {
     bayar.value = 0
-  } else if (metode === 'qris') {
-    bayar.value = totalTagihan.value
-    qrisVerified.value = false
-    qrisRefNumber.value = 'QRIS-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + Math.floor(10000 + Math.random() * 90000)
-  } else if (metode === 'transfer') {
-    bayar.value = totalTagihan.value
-    if (!transferRefNumber.value) {
-      transferRefNumber.value = 'TRF-' + Math.floor(100000 + Math.random() * 900000)
-    }
   }
-}
-
-const verifikasiQris = () => {
-  qrisVerified.value = true
-  bayar.value = totalTagihan.value
-  showToast('Pembayaran QRIS berhasil diverifikasi!', 'success')
 }
 
 // Barcode Scanner Handler
@@ -946,10 +806,6 @@ const bukaKonfirmasi = () => {
   if (!statusBayarValid.value) {
     if (paymentMethod.value === 'tunai') {
       showToast('Uang pembayaran masih kurang!', 'warning')
-    } else if (paymentMethod.value === 'qris') {
-      showToast('Harap verifikasi pembayaran QRIS terlebih dahulu!', 'warning')
-    } else if (paymentMethod.value === 'transfer') {
-      showToast('Harap masukkan nomor referensi transfer / 4 digit kartu!', 'warning')
     }
     return
   }
@@ -978,9 +834,9 @@ const prosesTransaksi = async () => {
         diskon: Number(diskonNominal.value || 0),
         items: keranjang.value.map(i => ({ id: i.id, qty: i.qty })),
         bayar: bayar.value,
-        metode_pembayaran: paymentMethod.value,
-        bank: paymentMethod.value === 'transfer' ? selectedBank.value : null,
-        nomor_referensi: activeRefNumber.value
+        metode_pembayaran: 'tunai',
+        bank: null,
+        nomor_referensi: null
       }
     })
 

@@ -89,8 +89,7 @@
           >
             <option value="all">Semua Metode</option>
             <option value="tunai">💵 Tunai Saja</option>
-            <option value="qris">📱 QRIS Saja</option>
-            <option value="transfer">💳 Transfer / Debit Saja</option>
+            <option value="midtrans">⚡ Midtrans Gateway Saja</option>
           </select>
         </div>
         <div>
