@@ -43,13 +43,20 @@
           <h2 class="text-lg sm:text-xl font-bold text-slate-900">Katalog Barang Toko</h2>
           <p class="text-xs text-slate-500">Tambah barang baru, perbarui stok, dan atur harga jual & harga modal</p>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            @click="bukaBulkModal"
+            class="rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-500 active:scale-95 flex items-center gap-1.5"
+          >
+            <span>📑 Tambah Massal / Import</span>
+          </button>
           <button
             type="button"
             @click="showFormTambah = !showFormTambah"
             class="rounded-xl bg-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-indigo-500 active:scale-95 flex items-center gap-1.5"
           >
-            <span>{{ showFormTambah ? '✕ Tutup Form' : '+ Tambah Barang' }}</span>
+            <span>{{ showFormTambah ? '✕ Tutup Form' : '+ Tambah 1 Barang' }}</span>
           </button>
           <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
             {{ filteredBarangList.length }} barang
@@ -375,6 +382,278 @@
         </form>
       </div>
     </div>
+
+    <!-- Modal Tambah Banyak Barang Sekaligus (Bulk Add & Import CSV/Excel) -->
+    <div
+      v-if="showBulkModal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4 animate-in fade-in duration-200"
+      @click.self="tutupBulkModal"
+    >
+      <div class="w-full max-w-4xl max-h-[92vh] flex flex-col rounded-[28px] bg-white p-4 sm:p-6 shadow-2xl border border-slate-200">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 text-lg font-bold">
+              📑
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900">Tambah Banyak Barang Sekaligus</h3>
+              <p class="text-xs text-slate-500">Input beberapa barang dalam tabel dinamis atau impor dari file CSV/Excel</p>
+            </div>
+          </div>
+          <button
+            @click="tutupBulkModal"
+            class="rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Tab Selector: Multi-Baris vs Import CSV/Excel -->
+        <div class="mt-4 flex rounded-2xl bg-slate-100 p-1 font-semibold text-xs text-slate-600">
+          <button
+            type="button"
+            @click="bulkTab = 'tabel'"
+            :class="bulkTab === 'tabel' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-slate-600 hover:text-slate-900'"
+            class="flex-1 py-2 rounded-xl transition flex items-center justify-center gap-1.5"
+          >
+            <span>📝 Formulir Multi-Baris ({{ bulkRows.length }} baris)</span>
+          </button>
+          <button
+            type="button"
+            @click="bulkTab = 'csv'"
+            :class="bulkTab === 'csv' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-slate-600 hover:text-slate-900'"
+            class="flex-1 py-2 rounded-xl transition flex items-center justify-center gap-1.5"
+          >
+            <span>📊 Import CSV / Salin Spreadsheet</span>
+          </button>
+        </div>
+
+        <!-- Body Scrollable -->
+        <div class="mt-4 flex-1 overflow-y-auto pr-1">
+          <!-- TAB 1: FORMULIR MULTI-BARIS -->
+          <div v-show="bulkTab === 'tabel'" class="space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  @click="tambahBarisBulk(1)"
+                  class="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-indigo-600 hover:bg-indigo-50 shadow-xs active:scale-95 transition"
+                >
+                  + Tambah 1 Baris
+                </button>
+                <button
+                  type="button"
+                  @click="tambahBarisBulk(5)"
+                  class="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-indigo-600 hover:bg-indigo-50 shadow-xs active:scale-95 transition"
+                >
+                  + Tambah 5 Baris
+                </button>
+              </div>
+              <button
+                type="button"
+                @click="resetBarisBulk"
+                class="text-xs text-rose-500 font-semibold hover:text-rose-600"
+              >
+                Reset Baris
+              </button>
+            </div>
+
+            <!-- Tabel Baris Input -->
+            <div class="overflow-x-auto rounded-2xl border border-slate-200">
+              <table class="min-w-full text-xs text-left">
+                <thead class="bg-slate-50 text-slate-600 border-b border-slate-200">
+                  <tr>
+                    <th class="p-2.5 w-10 text-center">No</th>
+                    <th class="p-2.5 min-w-[130px]">Kode Barang *</th>
+                    <th class="p-2.5 min-w-[180px]">Nama Produk *</th>
+                    <th class="p-2.5 min-w-[120px]">Kategori</th>
+                    <th class="p-2.5 min-w-[110px]">Harga Modal</th>
+                    <th class="p-2.5 min-w-[120px]">Harga Jual *</th>
+                    <th class="p-2.5 min-w-[90px]">Stok *</th>
+                    <th class="p-2.5 w-10 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr v-for="(row, idx) in bulkRows" :key="idx" class="hover:bg-slate-50/50">
+                    <td class="p-2.5 text-center font-bold text-slate-400">{{ idx + 1 }}</td>
+                    <td class="p-2">
+                      <input
+                        v-model="row.kode_barang"
+                        placeholder="BRG001"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-mono outline-none focus:border-indigo-500"
+                      />
+                    </td>
+                    <td class="p-2">
+                      <input
+                        v-model="row.nama_barang"
+                        placeholder="Nama Produk"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:border-indigo-500"
+                      />
+                    </td>
+                    <td class="p-2">
+                      <input
+                        v-model="row.kategori"
+                        placeholder="Kategori"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:border-indigo-500"
+                      />
+                    </td>
+                    <td class="p-2">
+                      <input
+                        v-model.number="row.harga_modal"
+                        type="number"
+                        min="0"
+                        placeholder="0"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:border-indigo-500"
+                      />
+                    </td>
+                    <td class="p-2">
+                      <input
+                        v-model.number="row.harga"
+                        type="number"
+                        min="0"
+                        placeholder="0"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-bold outline-none focus:border-indigo-500 text-indigo-700"
+                      />
+                    </td>
+                    <td class="p-2">
+                      <input
+                        v-model.number="row.stok"
+                        type="number"
+                        min="0"
+                        placeholder="0"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-bold text-center outline-none focus:border-indigo-500"
+                      />
+                    </td>
+                    <td class="p-2 text-center">
+                      <button
+                        type="button"
+                        @click="hapusBarisBulk(idx)"
+                        :disabled="bulkRows.length <= 1"
+                        class="rounded p-1 text-slate-400 hover:text-rose-600 disabled:opacity-30"
+                        title="Hapus baris"
+                      >
+                        🗑️
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB 2: IMPORT CSV & PASTE SPREADSHEET -->
+          <div v-show="bulkTab === 'csv'" class="space-y-4">
+            <div class="rounded-2xl border border-dashed border-indigo-200 bg-indigo-50/50 p-4">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <h4 class="text-xs font-bold text-indigo-950">Format Kolom CSV / Spreadsheet</h4>
+                  <p class="text-[11px] text-indigo-700 mt-0.5">
+                    Urutan kolom: <code>kode_barang, nama_barang, kategori, harga_modal, harga_jual, stok</code>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  @click="downloadTemplateCsv"
+                  class="rounded-xl border border-indigo-200 bg-white px-3 py-1.5 text-xs font-bold text-indigo-700 hover:bg-indigo-50 shadow-xs flex items-center gap-1.5 shrink-0"
+                >
+                  <span>📥 Unduh Template CSV</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Upload File CSV -->
+            <div>
+              <label class="mb-1 block text-xs font-bold text-slate-700">Pilih File CSV:</label>
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                @change="handleFileUpload"
+                class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-xs text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-600 file:px-3 file:py-1 file:text-xs file:font-bold file:text-white file:hover:bg-indigo-500 cursor-pointer"
+              />
+            </div>
+
+            <!-- Atau Salin-Tempel dari Excel -->
+            <div>
+              <label class="mb-1 block text-xs font-bold text-slate-700">Atau Salin-Tempel (Paste) Teks dari Excel / Google Sheets:</label>
+              <textarea
+                v-model="pastedText"
+                @input="parsePastedText"
+                rows="4"
+                placeholder="Contoh:
+BRG001	Kopi Tubruk	Minuman	3000	5000	50
+BRG002	Teh Manis	Minuman	2000	4000	40"
+                class="w-full rounded-xl border border-slate-300 bg-slate-50 p-3 font-mono text-xs text-slate-800 outline-none focus:border-indigo-500 focus:bg-white"
+              ></textarea>
+              <p class="mt-1 text-[11px] text-slate-400">Pemisah kolom bisa berupa Tab (dari salinan Excel) atau tanda koma (CSV).</p>
+            </div>
+
+            <!-- Preview Data Terbaca -->
+            <div v-if="parsedCsvItems.length > 0" class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Preview Data Terbaca ({{ parsedCsvItems.length }} item):</span>
+                <span class="text-[11px] text-emerald-600 font-semibold">Siap diimpor</span>
+              </div>
+              <div class="max-h-48 overflow-y-auto overflow-x-auto rounded-xl border border-slate-200">
+                <table class="min-w-full text-xs text-left">
+                  <thead class="bg-slate-100 text-slate-600">
+                    <tr>
+                      <th class="p-2">Kode</th>
+                      <th class="p-2">Nama Barang</th>
+                      <th class="p-2">Kategori</th>
+                      <th class="p-2 text-right">Modal</th>
+                      <th class="p-2 text-right">Jual</th>
+                      <th class="p-2 text-center">Stok</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <tr v-for="(it, i) in parsedCsvItems" :key="i">
+                      <td class="p-2 font-mono font-bold">{{ it.kode_barang }}</td>
+                      <td class="p-2 font-semibold">{{ it.nama_barang }}</td>
+                      <td class="p-2 text-slate-500">{{ it.kategori || '-' }}</td>
+                      <td class="p-2 text-right">Rp {{ Number(it.harga_modal || 0).toLocaleString() }}</td>
+                      <td class="p-2 text-right font-bold text-indigo-600">Rp {{ Number(it.harga || 0).toLocaleString() }}</td>
+                      <td class="p-2 text-center font-bold">{{ it.stok }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-slate-100 pt-3">
+          <label class="flex items-center gap-2 cursor-pointer text-xs text-slate-700">
+            <input
+              type="checkbox"
+              v-model="bulkUpdateIfExists"
+              class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <span class="font-medium">Perbarui data & tambahkan stok jika kode barang sudah ada (Opsi A)</span>
+          </label>
+
+          <div class="flex items-center gap-2 justify-end">
+            <button
+              type="button"
+              @click="tutupBulkModal"
+              :disabled="isSubmittingBulk"
+              class="rounded-xl border border-slate-300 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100"
+            >
+              Batal
+            </button>
+            <button
+              type="button"
+              @click="simpanBulkBarang"
+              :disabled="isSubmittingBulk || totalItemsToSubmit === 0"
+              class="rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-500 active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 transition flex items-center gap-1.5"
+            >
+              <span>{{ isSubmittingBulk ? 'Menyimpan...' : `Simpan ${totalItemsToSubmit} Barang` }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -392,6 +671,29 @@ const barangList = ref([])
 const searchKeyword = ref('')
 const filterKategori = ref('all')
 const showFormTambah = ref(false)
+
+// State Tambah Banyak Barang Sekaligus (Bulk Add & Import)
+const showBulkModal = ref(false)
+const bulkTab = ref('tabel') // 'tabel' | 'csv'
+const bulkUpdateIfExists = ref(true) // Opsi A
+const isSubmittingBulk = ref(false)
+const pastedText = ref('')
+const parsedCsvItems = ref([])
+
+const buatBarisKosong = () => ({
+  kode_barang: '',
+  nama_barang: '',
+  kategori: '',
+  harga_modal: '',
+  harga: '',
+  stok: ''
+})
+
+const bulkRows = ref([
+  buatBarisKosong(),
+  buatBarisKosong(),
+  buatBarisKosong()
+])
 
 const form = ref({
   kode_barang: '',
@@ -604,6 +906,176 @@ const hapusBarang = async (id) => {
     showToast('Gagal menghapus barang', 'error')
   } finally {
     deletingBarangIds.value = deletingBarangIds.value.filter(x => x !== id)
+  }
+}
+
+// Operasi Tambah Banyak Barang Sekaligus (Bulk Add & Import)
+const bukaBulkModal = () => {
+  if (bulkRows.value.length === 0) {
+    bulkRows.value = [buatBarisKosong(), buatBarisKosong(), buatBarisKosong()]
+  }
+  showBulkModal.value = true
+}
+
+const tutupBulkModal = () => {
+  showBulkModal.value = false
+}
+
+const tambahBarisBulk = (count = 1) => {
+  for (let i = 0; i < count; i++) {
+    bulkRows.value.push(buatBarisKosong())
+  }
+}
+
+const hapusBarisBulk = (idx) => {
+  bulkRows.value.splice(idx, 1)
+}
+
+const resetBarisBulk = () => {
+  bulkRows.value = [buatBarisKosong(), buatBarisKosong(), buatBarisKosong()]
+  pastedText.value = ''
+  parsedCsvItems.value = []
+}
+
+// Menghitung baris valid dari formulir multi-baris
+const validTableRows = computed(() => {
+  return bulkRows.value.filter(r => 
+    r.kode_barang && String(r.kode_barang).trim() !== '' &&
+    r.nama_barang && String(r.nama_barang).trim() !== '' &&
+    r.harga !== '' && !isNaN(Number(r.harga))
+  )
+})
+
+const totalItemsToSubmit = computed(() => {
+  if (bulkTab.value === 'tabel') {
+    return validTableRows.value.length
+  }
+  return parsedCsvItems.value.length
+})
+
+// Parsing Teks dari Excel / CSV
+const parseDelimitedText = (text) => {
+  if (!text || typeof text !== 'string') return []
+  const lines = text.trim().split(/\r?\n/)
+  const result = []
+
+  for (let i = 0; i < lines.length; i++) {
+    const rawLine = lines[i].trim()
+    if (!rawLine) continue
+
+    let delimiter = '\t'
+    if (rawLine.includes('\t')) delimiter = '\t'
+    else if (rawLine.includes(';')) delimiter = ';'
+    else if (rawLine.includes(',')) delimiter = ','
+
+    const parts = rawLine.split(delimiter).map(p => p.trim().replace(/^["']|["']$/g, ''))
+    
+    // Abaikan jika baris header
+    if (i === 0 && (parts[0].toLowerCase().includes('kode') || (parts[1] && parts[1].toLowerCase().includes('nama')))) {
+      continue
+    }
+
+    if (parts.length >= 2) {
+      const kode = parts[0] || ''
+      const nama = parts[1] || ''
+      const kategori = parts[2] || ''
+      const modal = Number(parts[3]) || 0
+      const harga = Number(parts[4]) || 0
+      const stok = parts[5] !== undefined ? Number(parts[5]) : 0
+
+      if (kode && nama && !isNaN(harga) && harga >= 0) {
+        result.push({
+          kode_barang: kode,
+          nama_barang: nama,
+          kategori: kategori || null,
+          harga_modal: modal,
+          harga: harga,
+          stok: isNaN(stok) ? 0 : stok
+        })
+      }
+    }
+  }
+  return result
+}
+
+const parsePastedText = () => {
+  parsedCsvItems.value = parseDelimitedText(pastedText.value)
+}
+
+const handleFileUpload = (event) => {
+  const file = event.target.files?.[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const content = e.target?.result
+    if (typeof content === 'string') {
+      pastedText.value = content
+      parsedCsvItems.value = parseDelimitedText(content)
+      showToast(`${parsedCsvItems.value.length} baris barang terbaca dari file CSV.`, 'info')
+    }
+  }
+  reader.readAsText(file)
+}
+
+const downloadTemplateCsv = () => {
+  const csvContent = "data:text/csv;charset=utf-8," +
+    "kode_barang,nama_barang,kategori,harga_modal,harga_jual,stok\n" +
+    "BRG001,Kopi Tubruk 100gr,Minuman,3000,5000,50\n" +
+    "BRG002,Teh Melati Celup,Minuman,2500,4000,30\n" +
+    "BRG003,Biskuit Cokelat,Makanan,4500,7000,20\n"
+  const encodedUri = encodeURI(csvContent)
+  const link = document.createElement("a")
+  link.setAttribute("href", encodedUri)
+  link.setAttribute("download", "template_tambah_barang.csv")
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
+const simpanBulkBarang = async () => {
+  let itemsToSave = []
+  if (bulkTab.value === 'tabel') {
+    itemsToSave = validTableRows.value.map(r => ({
+      kode_barang: String(r.kode_barang).trim(),
+      nama_barang: String(r.nama_barang).trim(),
+      kategori: r.kategori ? String(r.kategori).trim() : null,
+      harga_modal: Number(r.harga_modal) || 0,
+      harga: Number(r.harga) || 0,
+      stok: Number(r.stok) || 0
+    }))
+  } else {
+    itemsToSave = parsedCsvItems.value
+  }
+
+  if (itemsToSave.length === 0) {
+    showToast('Tidak ada data barang yang valid untuk disimpan!', 'warning')
+    return
+  }
+
+  if (isSubmittingBulk.value) return
+  isSubmittingBulk.value = true
+
+  try {
+    const res = await $fetch(`${apiBaseUrl}/barang/bulk`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token.value}` },
+      body: {
+        items: itemsToSave,
+        update_if_exists: bulkUpdateIfExists.value
+      }
+    })
+
+    const msg = res.message || `Berhasil memproses ${itemsToSave.length} barang!`
+    showToast(msg, 'success')
+    showBulkModal.value = false
+    resetBarisBulk()
+    await loadBarang()
+  } catch (err) {
+    console.error('Bulk store error:', err)
+    showToast(err.data?.message || 'Gagal menambahkan banyak barang.', 'error')
+  } finally {
+    isSubmittingBulk.value = false
   }
 }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class BarangController extends Controller
 {
@@ -110,5 +111,71 @@ class BarangController extends Controller
             'message' => "Stok {$barang->nama_barang} berhasil ditambahkan sebanyak {$request->jumlah} unit.",
             'data'    => $barang
         ], 200);
+    }
+
+    // Menambahkan banyak data barang sekaligus (Bulk Insert / Upsert)
+    public function bulkStore(Request $request)
+    {
+        $validated = $request->validate([
+            'items' => 'required|array|min:1',
+            'items.*.kode_barang' => 'required|string|max:50',
+            'items.*.nama_barang' => 'required|string|max:255',
+            'items.*.kategori'    => 'nullable|string|max:100',
+            'items.*.harga'       => 'required|numeric|min:0',
+            'items.*.harga_modal' => 'nullable|numeric|min:0',
+            'items.*.stok'        => 'required|integer|min:0',
+            'update_if_exists'    => 'nullable|boolean',
+        ]);
+
+        $updateIfExists = $request->boolean('update_if_exists', true);
+        $createdCount = 0;
+        $updatedCount = 0;
+        $skippedCount = 0;
+
+        DB::transaction(function () use ($validated, $updateIfExists, &$createdCount, &$updatedCount, &$skippedCount) {
+            foreach ($validated['items'] as $itemData) {
+                $kode = trim($itemData['kode_barang']);
+                $nama = trim($itemData['nama_barang']);
+                $kategori = !empty($itemData['kategori']) ? trim($itemData['kategori']) : null;
+                $harga = (float)$itemData['harga'];
+                $hargaModal = !empty($itemData['harga_modal']) ? (float)$itemData['harga_modal'] : 0;
+                $stok = (int)$itemData['stok'];
+
+                $existing = Barang::where('kode_barang', $kode)->first();
+
+                if ($existing) {
+                    if ($updateIfExists) {
+                        $existing->update([
+                            'nama_barang' => $nama,
+                            'kategori'    => $kategori ?? $existing->kategori,
+                            'harga'       => $harga,
+                            'harga_modal' => $hargaModal,
+                            'stok'        => $existing->stok + $stok,
+                        ]);
+                        $updatedCount++;
+                    } else {
+                        $skippedCount++;
+                    }
+                } else {
+                    Barang::create([
+                        'kode_barang' => $kode,
+                        'nama_barang' => $nama,
+                        'kategori'    => $kategori,
+                        'harga'       => $harga,
+                        'harga_modal' => $hargaModal,
+                        'stok'        => $stok,
+                    ]);
+                    $createdCount++;
+                }
+            }
+        });
+
+        return response()->json([
+            'message'       => "Berhasil memproses " . ($createdCount + $updatedCount) . " barang.",
+            'created_count' => $createdCount,
+            'updated_count' => $updatedCount,
+            'skipped_count' => $skippedCount,
+            'total_items'   => count($validated['items']),
+        ], 201);
     }
 }

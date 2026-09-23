@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Manajemen Barang
     Route::get('/barang', [BarangController::class, 'index']);
     Route::post('/barang', [BarangController::class, 'store']);
+    Route::post('/barang/bulk', [BarangController::class, 'bulkStore']);
     Route::put('/barang/{id}', [BarangController::class, 'update']);
     Route::post('/barang/{id}/tambah-stok', [BarangController::class, 'tambahStok']);
     Route::delete('/barang/{id}', [BarangController::class, 'destroy']);
