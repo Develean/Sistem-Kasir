@@ -135,26 +135,92 @@
         </div>
       </form>
 
-      <!-- Filter Pencarian Cepat -->
-      <div class="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div class="relative w-full max-w-sm">
-          <input
-            v-model="searchKeyword"
-            type="text"
-            placeholder="Cari kode atau nama barang..."
-            class="w-full rounded-xl border border-slate-300 bg-slate-50 py-2 pl-3 pr-8 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-100"
-          />
-          <span class="absolute right-2.5 top-2 text-slate-400">🔍</span>
+      <!-- Filter Pencarian Cepat & Multi-Kriteria -->
+      <div class="mt-6 space-y-3">
+        <!-- Baris 1: Search, Dropdowns (Kategori, Status Stok, Sorting) -->
+        <div class="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+          <!-- Cari Nama / Kode -->
+          <div class="relative">
+            <input
+              v-model="searchKeyword"
+              type="text"
+              placeholder="Cari kode atau nama barang..."
+              class="w-full rounded-xl border border-slate-300 bg-slate-50 py-2.5 pl-3 pr-8 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-100"
+            />
+            <span class="absolute right-2.5 top-2.5 text-slate-400">🔍</span>
+          </div>
+
+          <!-- Filter Kategori Dropdown -->
+          <div>
+            <select
+              v-model="filterKategori"
+              class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white"
+            >
+              <option value="all">📁 Semua Kategori</option>
+              <option v-for="kat in kategoriList" :key="kat" :value="kat">{{ kat }}</option>
+            </select>
+          </div>
+
+          <!-- Filter Status Stok -->
+          <div>
+            <select
+              v-model="filterStok"
+              class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white"
+            >
+              <option value="all">📦 Semua Stok Fisik</option>
+              <option value="safe">✓ Stok Aman (> 5 unit)</option>
+              <option value="low">⚠️ Stok Menipis (≤ 5 unit)</option>
+              <option value="empty">❌ Stok Habis (0 unit)</option>
+            </select>
+          </div>
+
+          <!-- Urutkan / Sorting -->
+          <div>
+            <select
+              v-model="sortBy"
+              class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white"
+            >
+              <option value="nama_asc">🔤 Nama (A - Z)</option>
+              <option value="nama_desc">🔤 Nama (Z - A)</option>
+              <option value="harga_asc">💵 Harga Jual Termurah</option>
+              <option value="harga_desc">💰 Harga Jual Termahal</option>
+              <option value="modal_desc">🏷️ Modal Terbesar</option>
+              <option value="margin_desc">📈 Margin Laba Tertinggi</option>
+              <option value="stok_desc">📊 Stok Terbanyak</option>
+              <option value="stok_asc">📉 Stok Paling Sedikit</option>
+            </select>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <label class="text-xs text-slate-500 font-medium">Filter Kategori:</label>
-          <select
-            v-model="filterKategori"
-            class="rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-xs text-slate-800 outline-none"
+
+        <!-- Baris 2: Category Chips & Reset Filter -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+          <button
+            @click="filterKategori = 'all'"
+            :class="filterKategori === 'all' ? 'bg-indigo-600 text-white font-bold shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
+            class="rounded-full px-3 py-1.5 whitespace-nowrap transition text-xs shrink-0 active:scale-95"
           >
-            <option value="all">Semua Kategori</option>
-            <option v-for="kat in kategoriList" :key="kat" :value="kat">{{ kat }}</option>
-          </select>
+            ✨ Semua ({{ barangList.length }})
+          </button>
+          <button
+            v-for="kat in kategoriList"
+            :key="kat"
+            @click="filterKategori = kat"
+            :class="filterKategori === kat ? 'bg-indigo-600 text-white font-bold shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
+            class="rounded-full px-3 py-1.5 whitespace-nowrap transition text-xs shrink-0 active:scale-95"
+          >
+            {{ kat }}
+          </button>
+
+          <!-- Reset Filter Button jika ada filter aktif -->
+          <button
+            v-if="searchKeyword || filterKategori !== 'all' || filterStok !== 'all' || sortBy !== 'nama_asc'"
+            type="button"
+            @click="resetBarangFilters"
+            class="rounded-full bg-rose-50 border border-rose-200 text-rose-600 px-3 py-1.5 text-xs font-bold hover:bg-rose-100 whitespace-nowrap transition shrink-0 active:scale-95"
+            title="Reset seluruh filter"
+          >
+            ✕ Reset Filter
+          </button>
         </div>
       </div>
 
@@ -670,7 +736,16 @@ const { show: showToast } = useToast()
 const barangList = ref([])
 const searchKeyword = ref('')
 const filterKategori = ref('all')
+const filterStok = ref('all')
+const sortBy = ref('nama_asc')
 const showFormTambah = ref(false)
+
+const resetBarangFilters = () => {
+  searchKeyword.value = ''
+  filterKategori.value = 'all'
+  filterStok.value = 'all'
+  sortBy.value = 'nama_asc'
+}
 
 // State Tambah Banyak Barang Sekaligus (Bulk Add & Import)
 const showBulkModal = ref(false)
@@ -747,13 +822,58 @@ const filteredBarangList = computed(() => {
   const kw = searchKeyword.value.trim().toLowerCase()
   const kat = filterKategori.value
 
-  return barangList.value.filter(item => {
+  const filtered = barangList.value.filter(item => {
+    // 1. Filter Kategori
     const matchCategory = kat === 'all' || String(item.kategori || '').toLowerCase() === kat.toLowerCase()
+
+    // 2. Filter Pencarian Nama / Kode Barang
     const matchSearch = !kw ||
       String(item.nama_barang || '').toLowerCase().includes(kw) ||
       String(item.kode_barang || '').toLowerCase().includes(kw)
 
-    return matchCategory && matchSearch
+    // 3. Filter Status Stok Fisik
+    let matchStok = true
+    const stok = Number(item.stok) || 0
+    if (filterStok.value === 'safe') {
+      matchStok = stok > 5
+    } else if (filterStok.value === 'low') {
+      matchStok = stok > 0 && stok <= 5
+    } else if (filterStok.value === 'empty') {
+      matchStok = stok <= 0
+    }
+
+    return matchCategory && matchSearch && matchStok
+  })
+
+  // 4. Urutkan Data (Sorting)
+  return filtered.sort((a, b) => {
+    if (sortBy.value === 'nama_asc') {
+      return String(a.nama_barang || '').localeCompare(String(b.nama_barang || ''))
+    }
+    if (sortBy.value === 'nama_desc') {
+      return String(b.nama_barang || '').localeCompare(String(a.nama_barang || ''))
+    }
+    if (sortBy.value === 'harga_asc') {
+      return (Number(a.harga) || 0) - (Number(b.harga) || 0)
+    }
+    if (sortBy.value === 'harga_desc') {
+      return (Number(b.harga) || 0) - (Number(a.harga) || 0)
+    }
+    if (sortBy.value === 'modal_desc') {
+      return (Number(b.harga_modal) || 0) - (Number(a.harga_modal) || 0)
+    }
+    if (sortBy.value === 'margin_desc') {
+      const marginA = Math.max(0, (Number(a.harga) || 0) - (Number(a.harga_modal) || 0))
+      const marginB = Math.max(0, (Number(b.harga) || 0) - (Number(b.harga_modal) || 0))
+      return marginB - marginA
+    }
+    if (sortBy.value === 'stok_desc') {
+      return (Number(b.stok) || 0) - (Number(a.stok) || 0)
+    }
+    if (sortBy.value === 'stok_asc') {
+      return (Number(a.stok) || 0) - (Number(b.stok) || 0)
+    }
+    return 0
   })
 })
 

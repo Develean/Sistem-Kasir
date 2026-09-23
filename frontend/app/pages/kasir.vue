@@ -79,32 +79,79 @@
           </div>
         </div>
 
-        <!-- Input Barcode Scanner Cepat & Filter Kategori -->
-        <div class="mt-4 grid gap-3 sm:grid-cols-2">
-          <div>
-            <div class="relative">
-              <input
-                ref="searchInputRef"
-                v-model="searchKeyword"
-                type="text"
-                placeholder="Scan barcode / cari nama lalu Enter (F2)..."
-                @keydown.enter.prevent="handleBarcodeScan"
-                class="w-full rounded-xl border border-slate-300 bg-slate-50 py-2.5 pl-3 pr-16 text-sm text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-100"
-              />
-              <span class="pointer-events-none absolute right-2.5 top-2.5 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
-                ↵ Enter
-              </span>
+        <!-- Input Barcode Scanner Cepat & Filter Multi-Kriteria -->
+        <div class="mt-4 space-y-3">
+          <!-- Baris 1: Search & Filter Grid -->
+          <div class="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+            <!-- Search / Scan Barcode -->
+            <div class="sm:col-span-2">
+              <div class="relative">
+                <input
+                  ref="searchInputRef"
+                  v-model="searchKeyword"
+                  type="text"
+                  placeholder="Scan barcode / cari nama lalu Enter (F2)..."
+                  @keydown.enter.prevent="handleBarcodeScan"
+                  class="w-full rounded-xl border border-slate-300 bg-slate-50 py-2.5 pl-3 pr-16 text-xs sm:text-sm text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-100"
+                />
+                <span class="pointer-events-none absolute right-2.5 top-2.5 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
+                  ↵ Enter
+                </span>
+              </div>
             </div>
-            <p class="mt-1 text-[11px] text-slate-400">Scanner barcode otomatis menekan Enter.</p>
+
+            <!-- Filter Status Stok -->
+            <div>
+              <select
+                v-model="filterStok"
+                class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white"
+              >
+                <option value="all">📦 Semua Stok</option>
+                <option value="ready">✓ Tersedia Saja (> 0)</option>
+                <option value="low">⚠️ Stok Menipis (≤ 5)</option>
+                <option value="empty">❌ Stok Habis (0)</option>
+              </select>
+            </div>
+
+            <!-- Urutkan / Sorting -->
+            <div>
+              <select
+                v-model="sortBy"
+                class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white"
+              >
+                <option value="nama_asc">🔤 Nama (A - Z)</option>
+                <option value="nama_desc">🔤 Nama (Z - A)</option>
+                <option value="harga_asc">💵 Harga Termurah</option>
+                <option value="harga_desc">💰 Harga Termahal</option>
+                <option value="stok_desc">📊 Stok Terbanyak</option>
+                <option value="stok_asc">📉 Stok Tersedikit</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <select
-              v-model="selectedCategory"
-              class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-100"
+
+          <!-- Baris 2: Quick Category Pills (Horizontal Scrollable) & Reset -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+            <button
+              v-for="cat in categories"
+              :key="cat"
+              type="button"
+              @click="selectedCategory = cat"
+              :class="selectedCategory === cat ? 'bg-indigo-600 text-white font-bold shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
+              class="rounded-full px-3 py-1.5 whitespace-nowrap transition text-xs shrink-0 active:scale-95"
             >
-              <option value="all">Semua Kategori</option>
-              <option v-for="c in categories.filter(x => x !== 'all')" :key="c" :value="c">{{ c }}</option>
-            </select>
+              {{ cat === 'all' ? '✨ Semua Kategori' : cat }}
+            </button>
+
+            <!-- Reset Filter Button jika ada filter aktif -->
+            <button
+              v-if="searchKeyword || selectedCategory !== 'all' || filterStok !== 'all' || sortBy !== 'nama_asc'"
+              type="button"
+              @click="resetKasirFilters"
+              class="rounded-full bg-rose-50 border border-rose-200 text-rose-600 px-3 py-1.5 text-xs font-bold hover:bg-rose-100 whitespace-nowrap transition shrink-0 active:scale-95"
+              title="Reset seluruh filter"
+            >
+              ✕ Reset Filter
+            </button>
           </div>
         </div>
 
@@ -655,6 +702,15 @@ const { show: showToast } = useToast()
 const searchInputRef = ref(null)
 const searchKeyword = ref('')
 const selectedCategory = ref('all')
+const filterStok = ref('all')
+const sortBy = ref('nama_asc')
+
+const resetKasirFilters = () => {
+  searchKeyword.value = ''
+  selectedCategory.value = 'all'
+  filterStok.value = 'all'
+  sortBy.value = 'nama_asc'
+}
 
 const daftarBarang = ref([])
 const keranjang = ref([])
@@ -726,15 +782,52 @@ const categories = computed(() => {
 })
 
 const tampilBarang = computed(() => {
-  return daftarBarang.value.filter(b => {
+  const filtered = daftarBarang.value.filter(b => {
+    // 1. Filter Kategori
     const matchCategory = !selectedCategory.value || selectedCategory.value === 'all' ||
       String(b.kategori || '').toLowerCase() === String(selectedCategory.value || '').toLowerCase()
 
-    const matchSearch = !searchKeyword.value ||
-      String(b.nama_barang || '').toLowerCase().includes(searchKeyword.value.toLowerCase()) ||
-      String(b.kode_barang || '').toLowerCase().includes(searchKeyword.value.toLowerCase())
+    // 2. Filter Pencarian Nama / Barcode
+    const kw = searchKeyword.value.trim().toLowerCase()
+    const matchSearch = !kw ||
+      String(b.nama_barang || '').toLowerCase().includes(kw) ||
+      String(b.kode_barang || '').toLowerCase().includes(kw)
 
-    return matchCategory && matchSearch
+    // 3. Filter Status Stok
+    let matchStok = true
+    const stok = Number(b.stok) || 0
+    if (filterStok.value === 'ready') {
+      matchStok = stok > 0
+    } else if (filterStok.value === 'low') {
+      matchStok = stok > 0 && stok <= 5
+    } else if (filterStok.value === 'empty') {
+      matchStok = stok <= 0
+    }
+
+    return matchCategory && matchSearch && matchStok
+  })
+
+  // 4. Urutkan Produk (Sorting)
+  return filtered.sort((a, b) => {
+    if (sortBy.value === 'nama_asc') {
+      return String(a.nama_barang || '').localeCompare(String(b.nama_barang || ''))
+    }
+    if (sortBy.value === 'nama_desc') {
+      return String(b.nama_barang || '').localeCompare(String(a.nama_barang || ''))
+    }
+    if (sortBy.value === 'harga_asc') {
+      return (Number(a.harga) || 0) - (Number(b.harga) || 0)
+    }
+    if (sortBy.value === 'harga_desc') {
+      return (Number(b.harga) || 0) - (Number(a.harga) || 0)
+    }
+    if (sortBy.value === 'stok_desc') {
+      return (Number(b.stok) || 0) - (Number(a.stok) || 0)
+    }
+    if (sortBy.value === 'stok_asc') {
+      return (Number(a.stok) || 0) - (Number(b.stok) || 0)
+    }
+    return 0
   })
 })
 
