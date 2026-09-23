@@ -3,13 +3,13 @@
     <!-- Statistik Ringkas Kasir (Responsif Compact di Mobile) -->
     <div class="mb-4 grid grid-cols-3 gap-2 sm:gap-4">
       <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-2.5 sm:p-5 shadow-sm">
-        <p class="text-[10px] sm:text-sm font-medium text-slate-500">Produk</p>
+        <p class="text-[10px] sm:text-sm font-medium text-slate-500">Produk Ready</p>
         <div class="mt-1 sm:mt-3 flex items-end justify-between">
           <div>
-            <p class="text-base sm:text-2xl font-bold text-slate-900">{{ daftarBarang.length }}</p>
-            <p class="hidden sm:block text-xs text-slate-500">Item terdaftar</p>
+            <p class="text-base sm:text-2xl font-bold text-slate-900">{{ readyBarangCount }}</p>
+            <p class="hidden sm:block text-xs text-slate-500">Stok siap dijual</p>
           </div>
-          <span class="rounded-full bg-emerald-50 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold text-emerald-700">Aktif</span>
+          <span class="rounded-full bg-emerald-50 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold text-emerald-700">Ready</span>
         </div>
       </div>
       <div class="rounded-2xl sm:rounded-[22px] border border-slate-200 bg-white p-2.5 sm:p-5 shadow-sm">
@@ -106,10 +106,8 @@
                 v-model="filterStok"
                 class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white"
               >
-                <option value="all">📦 Semua Stok</option>
-                <option value="ready">✓ Tersedia Saja (> 0)</option>
-                <option value="low">⚠️ Stok Menipis (≤ 5)</option>
-                <option value="empty">❌ Stok Habis (0)</option>
+                <option value="all">📦 Semua Produk Ready</option>
+                <option value="low">⚠️ Stok Menipis (1 - 5 unit)</option>
               </select>
             </div>
 
@@ -781,8 +779,18 @@ const categories = computed(() => {
   return ['all', ...Array.from(set)]
 })
 
+const readyBarangCount = computed(() => {
+  return daftarBarang.value.filter(b => (Number(b.stok) || 0) > 0).length
+})
+
 const tampilBarang = computed(() => {
   const filtered = daftarBarang.value.filter(b => {
+    // 0. Produk dengan stok 0 tidak ditampilkan di katalog produk kasir
+    const stok = Number(b.stok) || 0
+    if (stok <= 0) {
+      return false
+    }
+
     // 1. Filter Kategori
     const matchCategory = !selectedCategory.value || selectedCategory.value === 'all' ||
       String(b.kategori || '').toLowerCase() === String(selectedCategory.value || '').toLowerCase()
@@ -793,15 +801,10 @@ const tampilBarang = computed(() => {
       String(b.nama_barang || '').toLowerCase().includes(kw) ||
       String(b.kode_barang || '').toLowerCase().includes(kw)
 
-    // 3. Filter Status Stok
+    // 3. Filter Status Stok (ready vs low stock)
     let matchStok = true
-    const stok = Number(b.stok) || 0
-    if (filterStok.value === 'ready') {
-      matchStok = stok > 0
-    } else if (filterStok.value === 'low') {
-      matchStok = stok > 0 && stok <= 5
-    } else if (filterStok.value === 'empty') {
-      matchStok = stok <= 0
+    if (filterStok.value === 'low') {
+      matchStok = stok <= 5
     }
 
     return matchCategory && matchSearch && matchStok
@@ -852,6 +855,11 @@ const handleBarcodeScan = () => {
   )
 
   if (item) {
+    if (Number(item.stok || 0) <= 0) {
+      showToast(`Stok ${item.nama_barang} sudah habis (0 unit)!`, 'error')
+      searchKeyword.value = ''
+      return
+    }
     tambahKeKeranjang(item)
     searchKeyword.value = ''
   } else {
