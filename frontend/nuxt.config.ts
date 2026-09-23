@@ -9,7 +9,7 @@ export default defineNuxtConfig({
       script: [
         {
           src: 'https://app.sandbox.midtrans.com/snap/snap.js',
-          'data-client-key': 'SB-Mid-client-YOUR_CLIENT_KEY',
+          'data-client-key': process.env.NUXT_PUBLIC_MIDTRANS_CLIENT_KEY || 'SB-Mid-client-YOUR_CLIENT_KEY',
           id: 'midtrans-snap-script'
         }
       ]
@@ -17,11 +17,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBaseUrl:
-        import.meta.env.NUXT_PUBLIC_API_BASE_URL ||
-        (import.meta.env.PROD
-          ? 'https://localhost/crud-laravel/public/api'
-          : 'http://localhost/crud-laravel/public/api')
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost/crud-laravel/public/api'
     }
   }
 })
