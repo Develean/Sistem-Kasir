@@ -58,6 +58,8 @@ class TransaksiController extends Controller
                 'laba_kotor'        => max(0, $trx->total_harga - $totalModal),
                 'bayar'             => $trx->bayar,
                 'kembalian'         => $trx->kembali,
+                'snap_token'        => $trx->snap_token,
+                'snap_redirect_url' => $trx->snap_redirect_url,
             ];
         });
 

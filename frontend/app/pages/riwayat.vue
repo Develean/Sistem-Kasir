@@ -101,6 +101,7 @@
           >
             <option value="all">Semua Status</option>
             <option value="selesai">✓ Selesai (Lunas)</option>
+            <option value="pending">⏳ Pending (Menunggu Pembayaran)</option>
             <option value="dibatalkan">❌ Dibatalkan (Void)</option>
           </select>
         </div>
@@ -123,10 +124,10 @@
               <div class="flex flex-wrap items-center gap-2">
                 <span class="font-mono text-sm font-bold text-slate-900">{{ trx.noStruk }}</span>
                 <span
-                  :class="trx.status === 'dibatalkan' ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'"
+                  :class="trx.status === 'dibatalkan' ? 'bg-rose-100 text-rose-800' : trx.status === 'pending' ? 'bg-amber-100 text-amber-800 animate-pulse' : 'bg-emerald-100 text-emerald-800'"
                   class="rounded-full px-2.5 py-0.5 text-[10px] font-bold"
                 >
-                  {{ trx.status === 'dibatalkan' ? '❌ Dibatalkan (Void)' : '✓ Lunas' }}
+                  {{ trx.status === 'dibatalkan' ? '❌ Dibatalkan (Void)' : trx.status === 'pending' ? '⏳ Menunggu Bayar' : '✓ Lunas' }}
                 </span>
                 <span
                   :class="trx.metode_pembayaran === 'tunai' ? 'bg-emerald-100 text-emerald-800' : trx.metode_pembayaran === 'qris' ? 'bg-indigo-100 text-indigo-800' : 'bg-blue-100 text-blue-800'"
@@ -156,6 +157,22 @@
 
               <div class="mt-3 flex flex-wrap items-center justify-end gap-2">
                 <button
+                  v-if="trx.status === 'pending'"
+                  @click="cekStatusGateway(trx)"
+                  :disabled="checkingIds.includes(trx.id)"
+                  class="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-indigo-500 active:scale-95 disabled:opacity-50 shadow-sm"
+                >
+                  {{ checkingIds.includes(trx.id) ? 'Mengecek...' : '⚡ Cek Status Gateway' }}
+                </button>
+                <button
+                  v-if="trx.status === 'pending'"
+                  @click="simulasiBayarRiwayat(trx)"
+                  class="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-emerald-500 active:scale-95 shadow-sm"
+                >
+                  ✓ Simulasi Bayar
+                </button>
+                <button
+                  v-if="trx.status === 'selesai'"
                   @click="cetakRiwayat(trx)"
                   class="rounded-lg bg-slate-700 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-slate-600 active:scale-95 shadow-sm"
                 >
@@ -319,6 +336,7 @@ const filterMetode = ref('all')
 const showStruk = ref(false)
 const strukData = ref(null)
 const cancellingIds = ref([])
+const checkingIds = ref([])
 
 const loadRiwayat = async () => {
   try {
@@ -405,6 +423,42 @@ const batalkanTransaksi = async (trx) => {
     showToast(err.data?.message || 'Gagal membatalkan transaksi', 'error')
   } finally {
     cancellingIds.value = cancellingIds.value.filter(x => x !== trx.id)
+  }
+}
+
+const cekStatusGateway = async (trx) => {
+  checkingIds.value.push(trx.id)
+  try {
+    const res = await $fetch(`${apiBaseUrl}/payment/${trx.noStruk}/status`, {
+      headers: { Authorization: `Bearer ${token.value}` }
+    })
+
+    if (res.status === 'selesai') {
+      showToast('✓ Pembayaran terkonfirmasi LUNAS!', 'success')
+    } else if (res.status === 'pending') {
+      showToast('Status masih Menunggu Pembayaran dari pelanggan.', 'info')
+    } else {
+      showToast(`Status transaksi: ${res.status}`, 'warning')
+    }
+    await loadRiwayat()
+  } catch (err) {
+    console.error('Cek status error:', err)
+    showToast(err.data?.message || 'Gagal mengecek status ke gateway', 'error')
+  } finally {
+    checkingIds.value = checkingIds.value.filter(x => x !== trx.id)
+  }
+}
+
+const simulasiBayarRiwayat = async (trx) => {
+  try {
+    const res = await $fetch(`${apiBaseUrl}/payment/${trx.noStruk}/simulasi-sukses`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token.value}` }
+    })
+    showToast('✓ Simulasi pembayaran sukses! Transaksi lunas.', 'success')
+    await loadRiwayat()
+  } catch (err) {
+    showToast(err.data?.message || 'Gagal simulasi', 'error')
   }
 }
 

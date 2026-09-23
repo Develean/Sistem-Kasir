@@ -7,12 +7,16 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\PrintController;
+use App\Http\Controllers\PaymentController;
 
 // Public route (login)
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/login', function () {
     return response()->json(['message' => 'Unauthenticated.'], 401);
 })->name('login');
+
+// Public Webhook Callback Midtrans (tanpa auth sanctum / CSRF)
+Route::post('/payment/webhook', [PaymentController::class, 'webhook']);
 
 // Protected routes (semua akses kasir & barang wajib menyertakan token Sanctum)
 Route::middleware('auth:sanctum')->group(function () {
@@ -34,6 +38,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/transaksi', [TransaksiController::class, 'store']);
     Route::post('/transaksi/{id}/batal', [TransaksiController::class, 'batal']);
     Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy']);
+
+    // Payment Gateway Midtrans (Snap, Status Check, Simulasi & Batal)
+    Route::post('/payment/snap', [PaymentController::class, 'createSnap']);
+    Route::get('/payment/{noNota}/status', [PaymentController::class, 'checkStatus']);
+    Route::post('/payment/{noNota}/simulasi-sukses', [PaymentController::class, 'simulasiSukses']);
+    Route::post('/payment/{noNota}/batal', [PaymentController::class, 'batal']);
 
     // Cetak Struk ESC/POS
     Route::post('/print', [PrintController::class, 'print']);

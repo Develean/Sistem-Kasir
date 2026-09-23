@@ -3,6 +3,18 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-07-24',
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss'],
+  app: {
+    head: {
+      title: 'Sistem Kasir Modern POS',
+      script: [
+        {
+          src: 'https://app.sandbox.midtrans.com/snap/snap.js',
+          'data-client-key': 'SB-Mid-client-YOUR_CLIENT_KEY',
+          id: 'midtrans-snap-script'
+        }
+      ]
+    }
+  },
   runtimeConfig: {
     public: {
       apiBaseUrl:

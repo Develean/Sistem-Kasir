@@ -244,7 +244,16 @@
           <div class="mt-4 space-y-4">
             <div>
               <label class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">Pilih Metode Pembayaran</label>
-              <div class="grid grid-cols-3 gap-2">
+              <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                <button
+                  type="button"
+                  @click="pilihMetode('midtrans')"
+                  :class="paymentMethod === 'midtrans' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold ring-2 ring-indigo-200' : 'border-slate-200 bg-slate-50 text-slate-700 font-medium'"
+                  class="flex items-center justify-center gap-1.5 rounded-xl border p-2.5 text-xs transition"
+                >
+                  <span class="text-amber-500 font-extrabold">⚡</span>
+                  <span>Midtrans</span>
+                </button>
                 <button
                   type="button"
                   @click="pilihMetode('tunai')"
@@ -259,7 +268,7 @@
                   :class="paymentMethod === 'qris' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold ring-2 ring-indigo-200' : 'border-slate-200 bg-slate-50 text-slate-700 font-medium'"
                   class="flex items-center justify-center gap-1.5 rounded-xl border p-2.5 text-xs transition"
                 >
-                  <span>📱 QRIS</span>
+                  <span>📱 QRIS Statis</span>
                 </button>
                 <button
                   type="button"
@@ -267,13 +276,44 @@
                   :class="paymentMethod === 'transfer' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold ring-2 ring-indigo-200' : 'border-slate-200 bg-slate-50 text-slate-700 font-medium'"
                   class="flex items-center justify-center gap-1.5 rounded-xl border p-2.5 text-xs transition"
                 >
-                  <span>💳 Transfer / Debit</span>
+                  <span>💳 EDC / Bank</span>
                 </button>
               </div>
             </div>
 
+            <!-- DETAIL METODE: MIDTRANS SNAP GATEWAY -->
+            <div v-if="paymentMethod === 'midtrans'" class="space-y-3 rounded-2xl bg-indigo-50/70 p-3.5 border border-indigo-200">
+              <div class="flex items-center justify-between border-b border-indigo-100 pb-2 text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-indigo-950 flex items-center gap-1.5">
+                    <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Midtrans Snap Gateway
+                  </span>
+                  <span class="rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-bold text-indigo-700">Sandbox</span>
+                </div>
+                <span class="text-[11px] font-medium text-emerald-700 font-semibold">Otomatis / Real-Time</span>
+              </div>
+
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Pelanggan membayar via <strong>QRIS (GoPay, Dana, ShopeePay, OVO)</strong>, <strong>Virtual Account (BCA, Mandiri, BRI, BNI)</strong>, atau Kartu Kredit/Debit melalui popup resmi Midtrans.
+              </p>
+
+              <div class="flex flex-wrap gap-1.5 pt-0.5">
+                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">QRIS Dinamis</span>
+                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">BCA VA</span>
+                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">Mandiri VA</span>
+                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">BRI / BNI VA</span>
+                <span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 border border-slate-200 shadow-xs">GoPay / ShopeePay</span>
+              </div>
+
+              <div class="rounded-xl bg-white p-2.5 border border-indigo-100 flex justify-between items-center text-xs">
+                <span class="text-slate-500">Total Ditagihkan:</span>
+                <span class="font-extrabold text-indigo-700 text-sm">Rp {{ totalTagihan.toLocaleString() }} (Pas)</span>
+              </div>
+            </div>
+
             <!-- DETAIL METODE: TUNAI -->
-            <div v-if="paymentMethod === 'tunai'" class="space-y-3 rounded-2xl bg-slate-50 p-3.5 border border-slate-200">
+            <div v-else-if="paymentMethod === 'tunai'" class="space-y-3 rounded-2xl bg-slate-50 p-3.5 border border-slate-200">
               <div class="flex items-center justify-between">
                 <label class="block text-xs font-bold text-slate-700">Uang Tunai Diterima</label>
                 <button
@@ -408,7 +448,7 @@
             :disabled="isSubmitting || !statusBayarValid || totalTagihan === 0"
             class="mt-4 w-full rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
           >
-            {{ isSubmitting ? 'Memproses Transaksi...' : 'Proses Pembayaran & Cetak Struk' }}
+            {{ isSubmitting ? 'Memproses Transaksi...' : (paymentMethod === 'midtrans' ? '⚡ Buka Pembayaran Midtrans Snap' : 'Proses Pembayaran & Cetak Struk') }}
           </button>
         </div>
       </aside>
@@ -480,8 +520,78 @@
             :disabled="isSubmitting"
             class="rounded-xl bg-emerald-600 px-5 py-2 text-xs font-bold text-white hover:bg-emerald-500"
           >
-            {{ isSubmitting ? 'Menyimpan...' : 'Selesaikan & Cetak' }}
+            {{ isSubmitting ? 'Menyimpan...' : (paymentMethod === 'midtrans' ? 'Buka Midtrans Snap' : 'Selesaikan & Cetak') }}
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Monitoring & Simulasi Pembayaran Midtrans Snap -->
+    <div v-if="showSnapModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+      <div class="w-full max-w-md rounded-[28px] bg-white p-6 shadow-2xl border border-indigo-100 animate-in fade-in zoom-in-95 duration-200">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 text-lg font-bold">
+              ⚡
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Menunggu Pembayaran</h3>
+              <p class="text-[11px] font-mono text-slate-400">{{ activeSnapNoNota }}</p>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
+            <span class="h-2 w-2 rounded-full bg-amber-500 animate-ping"></span>
+            Pending
+          </span>
+        </div>
+
+        <div class="my-5 text-center">
+          <p class="text-xs text-slate-500">Total Tagihan Pelanggan:</p>
+          <p class="mt-1 text-3xl font-extrabold text-indigo-700">Rp {{ activeSnapTotal.toLocaleString() }}</p>
+          <p class="mt-2 text-xs text-slate-500">
+            Popup pembayaran Midtrans Snap sedang aktif. Sistem secara otomatis mendeteksi ketika pelanggan selesai membayar.
+          </p>
+        </div>
+
+        <!-- Indikator Polling Live -->
+        <div class="rounded-2xl bg-indigo-50/70 p-3 border border-indigo-100 text-xs text-indigo-900 flex items-center gap-3">
+          <div class="h-4 w-4 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent"></div>
+          <div class="flex-1">
+            <p class="font-semibold text-[11px]">Real-Time Auto Polling</p>
+            <p class="text-[10px] text-indigo-600">Mengecek konfirmasi bank/e-wallet setiap 2.5 detik...</p>
+          </div>
+        </div>
+
+        <!-- Tombol Aksi Kasir -->
+        <div class="mt-5 space-y-2">
+          <!-- Tombol Simulasi Sukses (Sangat berguna untuk pengujian sandbox / demo sebelum punya key) -->
+          <button
+            type="button"
+            @click="simulasikanBayarSukses"
+            :disabled="isSimulating"
+            class="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-sm hover:bg-emerald-500 transition active:scale-[0.99] disabled:opacity-50"
+          >
+            <span>✓</span>
+            <span>{{ isSimulating ? 'Memproses Simulasi...' : 'Simulasi Pembayaran Berhasil (Sandbox Demo)' }}</span>
+          </button>
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button
+              type="button"
+              @click="bukaUlangSnap"
+              class="rounded-xl border border-indigo-200 bg-white py-2 text-xs font-bold text-indigo-700 hover:bg-indigo-50 transition"
+            >
+              Buka Ulang Snap
+            </button>
+            <button
+              type="button"
+              @click="batalkanSnapTransaksi"
+              :disabled="isCancelling"
+              class="rounded-xl border border-rose-200 bg-rose-50 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 transition disabled:opacity-50"
+            >
+              {{ isCancelling ? 'Membatalkan...' : 'Batal Transaksi' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -622,6 +732,17 @@ const showStruk = ref(false)
 const strukData = ref(null)
 const isSubmitting = ref(false)
 
+// State Khusus Midtrans Snap
+const activeSnapNoNota = ref('')
+const activeSnapToken = ref('')
+const activeSnapTotal = ref(0)
+const activeSnapItems = ref([])
+const activeSnapCustomer = ref('')
+const showSnapModal = ref(false)
+const isSimulating = ref(false)
+const isCancelling = ref(false)
+let snapPollingTimer = null
+
 const subtotalBelanja = computed(() => {
   return keranjang.value.reduce((total, item) => total + (item.harga * item.qty), 0)
 })
@@ -641,6 +762,10 @@ const kembalian = computed(() => {
 // Validasi kesiapan bayar tergantung metode yang dipilih
 const statusBayarValid = computed(() => {
   if (totalTagihan.value <= 0 || keranjang.value.length === 0) return false
+
+  if (paymentMethod.value === 'midtrans') {
+    return true
+  }
 
   if (paymentMethod.value === 'tunai') {
     return bayar.value >= totalTagihan.value
@@ -689,7 +814,9 @@ const tampilBarang = computed(() => {
 const pilihMetode = (metode) => {
   paymentMethod.value = metode
 
-  if (metode === 'tunai') {
+  if (metode === 'midtrans') {
+    bayar.value = totalTagihan.value
+  } else if (metode === 'tunai') {
     bayar.value = 0
   } else if (metode === 'qris') {
     bayar.value = totalTagihan.value
@@ -832,6 +959,13 @@ const bukaKonfirmasi = () => {
 
 const prosesTransaksi = async () => {
   if (isSubmitting.value) return
+
+  // Jika metode adalah Midtrans Snap, gunakan alur Midtrans
+  if (paymentMethod.value === 'midtrans') {
+    await prosesMidtransPayment()
+    return
+  }
+
   isSubmitting.value = true
   showKonfirmasi.value = false
 
@@ -900,6 +1034,203 @@ const prosesTransaksi = async () => {
   }
 }
 
+// ----------------------------------------------------
+// LOGIKA PEMBAYARAN MIDTRANS SNAP
+// ----------------------------------------------------
+
+const prosesMidtransPayment = async () => {
+  isSubmitting.value = true
+  showKonfirmasi.value = false
+
+  try {
+    const res = await $fetch(`${apiBaseUrl}/payment/snap`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token.value}` },
+      body: {
+        nama_pelanggan: namaPelanggan.value,
+        diskon: Number(diskonNominal.value || 0),
+        items: keranjang.value.map(i => ({ id: i.id, qty: i.qty }))
+      }
+    })
+
+    activeSnapToken.value = res.snap_token
+    activeSnapNoNota.value = res.no_nota
+    activeSnapTotal.value = res.total_harga
+    activeSnapItems.value = keranjang.value.map(i => ({ ...i }))
+    activeSnapCustomer.value = namaPelanggan.value || 'Pelanggan Umum'
+
+    showSnapModal.value = true
+
+    // Panggil window.snap.pay jika script Midtrans tersedia
+    panggilSnapPopup(res.snap_token, res.no_nota)
+
+    // Mulai auto-polling status transaksi
+    mulaiPollingSnap(res.no_nota)
+
+    showToast('Silakan selesaikan pembayaran di popup Midtrans', 'info')
+  } catch (err) {
+    console.error('Midtrans Snap Error:', err)
+    showToast(err.data?.message || 'Gagal memulai transaksi Midtrans', 'error')
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+const panggilSnapPopup = (snapToken, noNota) => {
+  if (typeof window !== 'undefined' && window.snap && typeof window.snap.pay === 'function') {
+    try {
+      window.snap.pay(snapToken, {
+        onSuccess: async (result) => {
+          console.log('Snap Success:', result)
+          try {
+            const res = await $fetch(`${apiBaseUrl}/payment/${noNota}/status`, {
+              headers: { Authorization: `Bearer ${token.value}` }
+            })
+            handleSnapSuccess(res.transaksi || res)
+          } catch (e) {
+            handleSnapSuccess({ no_nota: noNota, total_harga: activeSnapTotal.value })
+          }
+        },
+        onPending: (result) => {
+          console.log('Snap Pending:', result)
+          showToast('Menunggu pelanggan menyelesaikan pembayaran...', 'info')
+        },
+        onError: (result) => {
+          console.error('Snap Error:', result)
+          showToast('Pembayaran Midtrans gagal atau ditolak!', 'error')
+        },
+        onClose: () => {
+          console.log('Snap Closed by user')
+        }
+      })
+    } catch (e) {
+      console.warn('Gagal memanggil window.snap.pay, beralih ke simulasi:', e)
+    }
+  } else {
+    console.warn('window.snap belum terpasang atau mode mock, gunakan simulasi kasir')
+  }
+}
+
+const bukaUlangSnap = () => {
+  if (activeSnapToken.value && activeSnapNoNota.value) {
+    panggilSnapPopup(activeSnapToken.value, activeSnapNoNota.value)
+  }
+}
+
+const mulaiPollingSnap = (noNota) => {
+  stopPollingSnap()
+  snapPollingTimer = setInterval(async () => {
+    try {
+      const res = await $fetch(`${apiBaseUrl}/payment/${noNota}/status`, {
+        headers: { Authorization: `Bearer ${token.value}` }
+      })
+
+      if (res.status === 'selesai') {
+        stopPollingSnap()
+        handleSnapSuccess(res.transaksi || res)
+      } else if (res.status === 'dibatalkan' || res.status === 'kadaluwarsa') {
+        stopPollingSnap()
+        showSnapModal.value = false
+        showToast('Pembayaran dibatalkan atau telah kadaluwarsa', 'warning')
+        await loadBarang()
+      }
+    } catch (e) {
+      console.warn('Polling error:', e)
+    }
+  }, 2500)
+}
+
+const stopPollingSnap = () => {
+  if (snapPollingTimer) {
+    clearInterval(snapPollingTimer)
+    snapPollingTimer = null
+  }
+}
+
+const handleSnapSuccess = async (trx) => {
+  stopPollingSnap()
+  showSnapModal.value = false
+
+  const cashierName = (() => {
+    try {
+      const u = typeof userCookie.value === 'string' ? JSON.parse(userCookie.value) : userCookie.value
+      return u?.name || 'Kasir'
+    } catch (e) {
+      return 'Kasir'
+    }
+  })()
+
+  strukData.value = {
+    noStruk: trx.no_nota || activeSnapNoNota.value,
+    tanggal: new Date().toLocaleString('id-ID'),
+    kasir: cashierName,
+    nama_pelanggan: trx.nama_pelanggan || activeSnapCustomer.value,
+    items: activeSnapItems.value.length ? activeSnapItems.value : (trx.items || []),
+    diskon: trx.diskon || 0,
+    total: trx.total_harga || activeSnapTotal.value,
+    bayar: trx.bayar || activeSnapTotal.value,
+    kembalian: 0,
+    metode: 'MIDTRANS GATEWAY',
+    bank: trx.bank || 'QRIS / VA',
+    nomor_referensi: trx.nomor_referensi || trx.no_nota || activeSnapNoNota.value
+  }
+
+  showStruk.value = true
+  keranjang.value = []
+  bayar.value = 0
+  diskonNominal.value = 0
+  namaPelanggan.value = 'Pelanggan Umum'
+  showToast('✓ Pembayaran Midtrans Berhasil Diverifikasi!', 'success')
+
+  await loadBarang()
+
+  // Cetak struk otomatis jika ESC/POS terhubung
+  try {
+    await $fetch(`${apiBaseUrl}/print`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token.value}` },
+      body: strukData.value
+    })
+  } catch (e) {}
+}
+
+const simulasikanBayarSukses = async () => {
+  if (isSimulating.value || !activeSnapNoNota.value) return
+  isSimulating.value = true
+  try {
+    const res = await $fetch(`${apiBaseUrl}/payment/${activeSnapNoNota.value}/simulasi-sukses`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token.value}` }
+    })
+    await handleSnapSuccess(res.data)
+  } catch (err) {
+    showToast(err.data?.message || 'Simulasi gagal', 'error')
+  } finally {
+    isSimulating.value = false
+  }
+}
+
+const batalkanSnapTransaksi = async () => {
+  if (isCancelling.value || !activeSnapNoNota.value) return
+  if (!confirm('Apakah Anda yakin ingin membatalkan transaksi ini? Stok produk akan dikembalikan.')) return
+
+  isCancelling.value = true
+  try {
+    await $fetch(`${apiBaseUrl}/payment/${activeSnapNoNota.value}/batal`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token.value}` }
+    })
+    stopPollingSnap()
+    showSnapModal.value = false
+    showToast('Transaksi Midtrans telah dibatalkan dan stok dikembalikan.', 'info')
+    await loadBarang()
+  } catch (err) {
+    showToast(err.data?.message || 'Gagal membatalkan transaksi', 'error')
+  } finally {
+    isCancelling.value = false
+  }
+}
+
 const cetakStrukBrowser = () => {
   if (typeof window !== 'undefined') {
     window.print()
@@ -928,6 +1259,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  stopPollingSnap()
   if (typeof window !== 'undefined') {
     window.removeEventListener('keydown', handleKeydown)
   }

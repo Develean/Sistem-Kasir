@@ -19,10 +19,14 @@ class Transaksi extends Model
         'nomor_referensi',
         'status',
         'items',
+        'snap_token',
+        'snap_redirect_url',
+        'payment_gateway_response',
     ];
 
     protected $casts = [
         'items' => 'array',
+        'payment_gateway_response' => 'array',
     ];
 
     public function user()
