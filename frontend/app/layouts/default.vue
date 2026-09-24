@@ -3,28 +3,45 @@
     <!-- ========================================== -->
     <!-- DESKTOP SIDEBAR (Tampil di Layar lg ke Atas) -->
     <!-- ========================================== -->
-    <aside class="hidden lg:flex w-64 xl:w-72 shrink-0 bg-slate-900 border-r border-slate-800 text-white h-screen sticky top-0 flex-col justify-between p-4 xl:p-5 shadow-2xl z-30 overflow-y-auto">
-      <div class="space-y-6">
-        <!-- Logo & Branding Toko -->
-        <div class="flex items-center gap-3 px-2 py-1">
-          <img
-            v-if="logoToko"
-            :src="logoToko"
-            alt="Logo Toko"
-            class="h-11 w-11 shrink-0 rounded-2xl object-cover shadow-inner border border-indigo-500/30 bg-white"
-          />
-          <div
-            v-else
-            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-500/20 text-2xl shadow-inner border border-indigo-500/30"
+    <aside
+      :class="isDesktopSidebarOpen ? 'w-64 xl:w-72 p-4 xl:p-5 opacity-100' : 'w-0 p-0 border-r-0 opacity-0 overflow-hidden pointer-events-none'"
+      class="hidden lg:flex shrink-0 bg-slate-900 border-r border-slate-800 text-white h-screen sticky top-0 flex-col justify-between shadow-2xl z-30 overflow-y-auto transition-all duration-300 ease-in-out"
+    >
+      <div class="space-y-6 w-full">
+        <!-- Logo & Branding Toko + Tombol Tutup Sidebar -->
+        <div class="flex items-center justify-between gap-2 px-1 py-1">
+          <div class="flex items-center gap-3 min-w-0">
+            <img
+              v-if="logoToko"
+              :src="logoToko"
+              alt="Logo Toko"
+              class="h-10 w-10 shrink-0 rounded-2xl object-cover shadow-inner border border-indigo-500/30 bg-white"
+            />
+            <div
+              v-else
+              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-indigo-500/20 text-xl shadow-inner border border-indigo-500/30"
+            >
+              🛒
+            </div>
+            <div class="min-w-0">
+              <h1 class="text-sm xl:text-base font-extrabold tracking-tight text-white leading-tight truncate">
+                {{ namaToko }}
+              </h1>
+              <p class="text-[10px] text-indigo-300 font-medium">Sistem Kasir & POS</p>
+            </div>
+          </div>
+
+          <!-- Tombol Tutup Sidebar di Desktop -->
+          <button
+            type="button"
+            @click="toggleDesktopSidebar"
+            title="Tutup Sidebar (Ctrl+B)"
+            class="hidden lg:flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white transition active:scale-95"
           >
-            🛒
-          </div>
-          <div class="min-w-0">
-            <h1 class="text-base xl:text-lg font-extrabold tracking-tight text-white leading-tight truncate">
-              {{ namaToko }}
-            </h1>
-            <p class="text-[11px] text-indigo-300 font-medium">Sistem Kasir & POS</p>
-          </div>
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+            </svg>
+          </button>
         </div>
 
         <!-- Kartu Profil Pengguna & Role Badge -->
@@ -354,13 +371,67 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- AREA KONTEN UTAMA (Main Content Slot)      -->
+    <!-- AREA KONTEN UTAMA (Main Content Area)      -->
     <!-- ========================================== -->
-    <main class="flex-1 min-w-0 p-3 sm:p-6 lg:p-8 pb-24 lg:pb-8 overflow-y-auto">
-      <div class="max-w-7xl mx-auto w-full">
-        <slot />
+    <div class="flex-1 min-w-0 flex flex-col min-h-screen">
+      <!-- Desktop Topbar untuk Buka / Tutup Sidebar -->
+      <div class="hidden lg:flex items-center justify-between border-b border-slate-200/80 bg-white/80 backdrop-blur-md px-6 py-2.5 sticky top-0 z-20 shadow-xs">
+        <div class="flex items-center gap-3">
+          <!-- Tombol Buka / Tutup Sidebar Desktop -->
+          <button
+            type="button"
+            @click="toggleDesktopSidebar"
+            class="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-indigo-600 hover:border-indigo-300 active:scale-95 transition shadow-xs group"
+            :title="isDesktopSidebarOpen ? 'Tutup Sidebar (Ctrl+B)' : 'Buka Sidebar (Ctrl+B)'"
+          >
+            <svg
+              class="h-4 w-4 text-slate-500 group-hover:text-indigo-600 transition-transform duration-200"
+              :class="{ 'rotate-180': !isDesktopSidebarOpen }"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+            </svg>
+            <span>{{ isDesktopSidebarOpen ? 'Tutup Sidebar' : 'Buka Sidebar' }}</span>
+            <span class="rounded bg-slate-100 px-1.5 py-0.5 text-[9px] font-mono text-slate-400">Ctrl+B</span>
+          </button>
+
+          <!-- Indikator Branding jika Sidebar Tertutup -->
+          <div v-if="!isDesktopSidebarOpen" class="flex items-center gap-2 pl-3 border-l border-slate-200">
+            <img
+              v-if="logoToko"
+              :src="logoToko"
+              alt="Logo"
+              class="h-6 w-6 rounded-lg object-cover bg-white border border-slate-200"
+            />
+            <span v-else class="text-base">🛒</span>
+            <span class="text-xs font-extrabold text-slate-800 tracking-tight">{{ namaToko }}</span>
+          </div>
+        </div>
+
+        <!-- Info User & Status di Topbar Kanan Desktop -->
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-xs font-semibold text-slate-600">{{ userName }}</span>
+            <span
+              :class="isAdmin ? 'bg-amber-50 text-amber-700 border-amber-300' : 'bg-emerald-50 text-emerald-700 border-emerald-300'"
+              class="rounded-full border px-2 py-0.5 text-[9px] font-extrabold uppercase"
+            >
+              {{ role }}
+            </span>
+          </div>
+        </div>
       </div>
-    </main>
+
+      <!-- Main Slot Content -->
+      <main class="flex-1 min-w-0 p-3 sm:p-6 lg:p-8 pb-24 lg:pb-8 overflow-y-auto">
+        <div class="max-w-7xl mx-auto w-full">
+          <slot />
+        </div>
+      </main>
+    </div>
 
     <!-- ========================================== -->
     <!-- BOTTOM NAV MOBILE (< md)                   -->
@@ -450,11 +521,39 @@ const { show: showToast } = useToast()
 const { user, token, role, isAdmin, isKasir, clearAuth } = useAuth()
 const { namaToko, logoToko, loadSetting } = useToko()
 
+const isMobileSidebarOpen = ref(false)
+const isDesktopSidebarOpen = ref(true)
+
+const toggleDesktopSidebar = () => {
+  isDesktopSidebarOpen.value = !isDesktopSidebarOpen.value
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('pos_desktop_sidebar_open', String(isDesktopSidebarOpen.value))
+  }
+}
+
+const handleGlobalKeydown = (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+    e.preventDefault()
+    toggleDesktopSidebar()
+  }
+}
+
 onMounted(() => {
   loadSetting()
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('pos_desktop_sidebar_open')
+    if (saved !== null) {
+      isDesktopSidebarOpen.value = saved === 'true'
+    }
+    window.addEventListener('keydown', handleGlobalKeydown)
+  }
 })
 
-const isMobileSidebarOpen = ref(false)
+onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('keydown', handleGlobalKeydown)
+  }
+})
 
 const userName = computed(() => {
   return user.value?.name || user.value?.email || 'Pengguna'
