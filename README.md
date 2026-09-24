@@ -1,36 +1,58 @@
 # 🛒 Sistem Kasir Modern (POS - Point of Sale)
 
-Aplikasi **Sistem Kasir (Point of Sale)** berbasis web yang modern, cepat, dan responsif. Dibangun dengan arsitektur terpisah (*decoupled architecture*) menggunakan **Laravel** sebagai backend RESTful API dan **Nuxt 4 / Vue 3 + Tailwind CSS** sebagai frontend antarmuka kasir yang interaktif.
+Aplikasi **Sistem Kasir (Point of Sale)** berbasis web yang modern, cepat, dan responsif dengan sistem **Multi-Role (Admin & Kasir)**. Dibangun menggunakan arsitektur terpisah (*decoupled architecture*): **Laravel** sebagai backend RESTful API yang aman (Sanctum) dan **Nuxt 4 / Vue 3 + Tailwind CSS** sebagai antarmuka pengguna yang interaktif.
 
 ---
 
-## 🌟 Fitur Utama
+## 🌟 Fitur Berdasarkan Peran (Role-Based Access)
 
-### 1. 🖥️ Kasir & Transaksi Cepat (POS)
-- **Katalog Produk Interaktif:** Pencarian barang instan (nama/barcode), filter kategori (*category chips*), dan sorting (nama, harga, stok).
-- **Auto-Hide Out of Stock:** Barang dengan stok habis otomatis disembunyikan dari katalog kasir untuk mencegah salah input.
-- **Keranjang Belanja Real-time:** Perhitungan otomatis subtotal, diskon, pajak, dan nominal kembalian.
+Aplikasi memisahkan antarmuka dan hak akses secara ketat antara **Administrator** dan **Staff Kasir**:
+
+| Fitur / Halaman | Staff Kasir | Administrator |
+|---|:---:|:---:|
+| 🛒 **Halaman Kasir (POS)** | ✅ Akses Penuh | ❌ Otomatis dialihkan ke Activity |
+| 📦 **Kelola Barang & Inventori** | ✅ Akses Penuh | ❌ Disembunyikan |
+| 📊 **Activity User Log** | ❌ Disembunyikan | ✅ Akses Penuh |
+| 👥 **Kelola Pengguna (CRUD Users)** | ❌ Disembunyikan | ✅ Akses Penuh |
+| 📜 **Riwayat Transaksi & Struk** | ✅ Akses Penuh | ✅ Akses Penuh |
+| 🚫 **Batalkan (Void Transaksi)** | ❌ Disembunyikan | ✅ Diizinkan |
+
+---
+
+## 🚀 Fitur Lengkap
+
+### 1. 🛒 Kasir & Transaksi POS (Khusus Staff Kasir)
+- **Katalog Produk Interaktif:** Pencarian instan, filter kategori (*category chips*), dan pengurutan (nama, harga, stok).
+- **Auto-Hide Out of Stock:** Produk dengan stok habis otomatis disembunyikan dari katalog transaksi kasir.
+- **Kalkulasi Otomatis:** Perhitungan subtotal, diskon, pajak, dan nominal uang kembalian instan.
 - **Multi-Metode Pembayaran:**
-  - Pembayaran **Tunai (Cash)** dengan kalkulator kembalian instan.
-  - Pembayaran **Digital / Non-Tunai** via **Midtrans Payment Gateway** (QRIS, GoPay, ShopeePay, Virtual Account Bank, Kartu Kredit).
-- **Cetak Struk Thermal:** Integrasi cetak struk via printer thermal (ESC/POS) dan cetak browser.
+  - **Tunai (Cash)** dengan kalkulator pecahan cepat.
+  - **Digital Payment Gateway (Midtrans Snap):** QRIS (GoPay, ShopeePay, OVO), Virtual Account Bank (BCA, BNI, BRI, Mandiri), dan Kartu Kredit.
+- **Cetak Struk Thermal:** Integrasi pencetakan ke printer thermal ESC/POS 58mm/80mm dan cetak browser.
 
-### 2. 📦 Manajemen Inventori & Barang
-- **CRUD Produk:** Tambah, edit, dan hapus barang lengkap dengan foto, barcode, kategori, harga beli, dan harga jual.
-- **Quick Stock Adjustment:** Tombol cepat untuk menambah stok barang masuk tanpa perlu edit keseluruhan data.
-- **Bulk Add & Import:**
-  - Input banyak barang sekaligus dalam satu form dinamis.
-  - Import data produk massal dari file CSV / spreadsheet.
+### 2. 📦 Manajemen Inventori & Barang (Khusus Staff Kasir)
+- **CRUD Produk:** Tambah, edit, dan hapus barang lengkap dengan barcode, gambar, kategori, harga modal (HPP), harga jual, dan stok.
+- **Penyesuaian Stok Cepat:** Tombol tambah stok masuk tanpa perlu edit seluruh data barang.
+- **Bulk Add & Import Massal:** Form input dinamis banyak barang sekaligus serta import massal via file CSV/Spreadsheet.
 
-### 3. 📜 Riwayat Transaksi & Laporan
-- Riwayat transaksi penjualan lengkap dengan status pembayaran (*Pending, Lunas, Dibatalkan*).
-- Filter transaksi berdasarkan rentang tanggal dan status.
-- Cetak ulang struk transaksi kapan saja.
-- Fitur pembatalan transaksi dengan pengembalian stok otomatis.
+### 3. 📊 Activity User Log (Khusus Administrator)
+- **Pemantauan Linimasa Aktivitas:** Mencatat setiap aktivitas penting sistem secara real-time:
+  - 🔐 Login & Logout pengguna (beserta alamat IP client).
+  - 🛒 Pembuatan transaksi POS baru beserta nominal dan metode bayar.
+  - 🚫 Pembatalan (void) transaksi beserta restock produk otomatis.
+  - 📦 Penambahan, perubahan stok, dan penghapusan barang.
+  - 👥 Penambahan akun, perubahan role, dan reset password.
+- **Filter & Statistik:** Ringkasan total aktivitas, aktivitas hari ini, filter berdasarkan role, kategori aksi, dan tanggal.
 
-### 4. 🔒 Keamanan & Autentikasi
-- Proteksi endpoint API dengan **Laravel Sanctum (Token-based Auth)**.
-- Public Webhook Midtrans yang aman untuk sinkronisasi status pembayaran otomatis.
+### 4. 👥 Manajemen Pengguna (Khusus Administrator)
+- **Kelola Akun:** Melihat daftar semua pengguna sistem, menambah akun baru, mengedit profil, dan mengganti role (*Admin / Kasir*).
+- **Reset Password:** Mengubah password akun staf kasir secara langsung.
+- **Proteksi Akun:** Mencegah administrator menghapus atau menurunkan (*demote*) role akunnya sendiri yang sedang aktif.
+
+### 5. 📜 Riwayat Transaksi & Pelaporan
+- Pencatatan seluruh transaksi penjualan lengkap dengan status (*Pending, Lunas, Dibatalkan*).
+- Filter transaksi berdasarkan rentang tanggal, status, dan metode pembayaran.
+- Cetak ulang struk transaksi dan pembatalan (*void*) dengan pengembalian stok otomatis.
 
 ---
 
@@ -41,9 +63,9 @@ Aplikasi **Sistem Kasir (Point of Sale)** berbasis web yang modern, cepat, dan r
 | **Frontend** | [Nuxt 4](https://nuxt.com/) (Vue 3, Vite, Composition API), [Tailwind CSS](https://tailwindcss.com/) |
 | **Backend** | [Laravel 12/13](https://laravel.com/) (PHP 8.2+ / 8.3+), [Laravel Sanctum](https://laravel.com/docs/sanctum) |
 | **Database** | MySQL / SQLite |
-| **Payment Gateway** | [Midtrans Snap API & Webhook](https://midtrans.com/) |
-| **Printer Thermal** | `mike42/escpos-php` |
-| **Deployment / Container** | Docker & Laragon |
+| **Payment Gateway** | [Midtrans Snap API & Webhook Callback](https://midtrans.com/) |
+| **Thermal Printer** | `mike42/escpos-php` |
+| **Container / Server** | Docker, Laragon, Apache, Node.js |
 
 ---
 
@@ -51,132 +73,125 @@ Aplikasi **Sistem Kasir (Point of Sale)** berbasis web yang modern, cepat, dan r
 
 ```text
 Sistem-kasir/
-├── backend/                  # RESTful API Backend (Laravel)
+├── backend/
 │   ├── app/
-│   │   ├── Http/Controllers/ # Auth, Barang, Transaksi, Payment, Print
-│   │   └── Models/          # Eloquent Models (Barang, Transaksi, DetailTransaksi)
-│   ├── config/               # Konfigurasi aplikasi, CORS, auth
-│   ├── database/             # Migrasi & Seeder
-│   ├── routes/api.php        # Definisi rute API
-│   ├── Dockerfile            # Konfigurasi Docker untuk deploy backend
-│   └── docker-entrypoint.sh  # Script startup Docker
-├── frontend/                 # Client Frontend (Nuxt 4 + Tailwind CSS)
+│   │   ├── Http/
+│   │   │   ├── Controllers/
+│   │   │   │   ├── AuthController.php      # Login, Logout, Info User & Activity Log
+│   │   │   │   ├── BarangController.php    # CRUD Barang & Bulk Import
+│   │   │   │   ├── TransaksiController.php # Transaksi POS, Void & Restock
+│   │   │   │   ├── PaymentController.php   # Midtrans Snap & Webhook Callback
+│   │   │   │   ├── UserController.php      # CRUD Pengguna & Reset Password
+│   │   │   │   ├── ActivityController.php  # Pemantauan Log Aktivitas User
+│   │   │   │   └── PrintController.php     # Cetak Struk ESC/POS Printer Thermal
+│   │   │   └── Middleware/
+│   │   │       └── EnsureUserIsAdmin.php   # Middleware Proteksi Role Admin
+│   │   └── Models/
+│   │       ├── User.php                    # Model User (Role: Admin / Kasir)
+│   │       ├── Barang.php                  # Model Produk & Stok
+│   │       ├── Transaksi.php               # Model Penjualan & Pembayaran
+│   │       └── ActivityLog.php             # Model Pencatatan Log Aktivitas
+│   ├── database/
+│   │   ├── migrations/                     # Migrasi tabel users, barangs, transaksis, activity_logs
+│   │   └── seeders/
+│   │       ├── UserSeeder.php              # Akun default admin & kasir
+│   │       ├── ActivityLogSeeder.php       # Contoh awal riwayat aktivitas
+│   │       └── DatabaseSeeder.php
+│   ├── routes/api.php                      # Endpoint API RESTful
+│   └── Dockerfile
+├── frontend/
 │   ├── app/
+│   │   ├── composables/
+│   │   │   ├── useAuth.js                  # State management user, role, token & helper isAdmin/isKasir
+│   │   │   └── useToast.js                 # Notifikasi toast global
+│   │   ├── layouts/
+│   │   │   └── default.vue                 # Header navbar responsif dengan filter menu role
 │   │   └── pages/
-│   │       ├── index.vue     # Halaman Login
-│   │       ├── kasir.vue     # Antarmuka Utama Kasir POS
-│   │       ├── barang.vue    # Manajemen Katalog & Stok Produk
-│   │       └── riwayat.vue   # Riwayat Transaksi & Cetak Struk
-│   └── nuxt.config.ts        # Konfigurasi Nuxt & Midtrans SDK
-└── README.md                 # Dokumentasi Project
+│   │       ├── index.vue                   # Login dengan routing otomatis sesuai role
+│   │       ├── kasir.vue                   # Antarmuka Transaksi POS (Kasir Only)
+│   │       ├── barang.vue                  # Manajemen Katalog & Stok (Kasir Only)
+│   │       ├── riwayat.vue                 # Riwayat Penjualan & Cetak Struk (Kasir & Admin)
+│   │       ├── activity.vue                # Linimasa Activity User (Admin Only)
+│   │       └── users.vue                   # Kelola Pengguna & Reset Password (Admin Only)
+│   └── nuxt.config.ts                      # Konfigurasi Nuxt & Midtrans SDK
+└── README.md
 ```
 
 ---
 
-## 🚀 Panduan Instalasi & Menjalankan
+## 🔑 Akun Default Sistem
 
-### Prasyarat
-- **PHP** >= 8.2 (dengan ekstensi `pdo`, `mbstring`, `openssl`, `curl`)
-- **Composer**
-- **Node.js** >= 18.x & **npm**
-- **MySQL** (atau SQLite)
+Setelah menjalankan seeder database, Anda dapat langsung login menggunakan akun default berikut:
+
+| Role | Email | Password | Hak Akses Utama |
+|---|---|---|---|
+| **Administrator** | `admin@gmail.com` | `admin123` | Activity User, Riwayat Penjualan, Kelola Pengguna, Void Transaksi |
+| **Staff Kasir** | `kasir@gmail.com` | `kasir123` | Halaman Kasir POS, Kelola Inventori Barang, Riwayat Transaksi |
 
 ---
+
+## 🚀 Panduan Menjalankan Aplikasi
 
 ### 1. Setup Backend (Laravel)
 
-1. Masuk ke direktori `backend`:
-   ```bash
-   cd backend
-   ```
+```bash
+cd backend
+composer install
+cp .env.example .env
+php artisan key:generate
 
-2. Install dependensi PHP:
-   ```bash
-   composer install
-   ```
+# Konfigurasikan database MySQL di .env, lalu:
+php artisan migrate --seed
 
-3. Salin file `.env` dan generate application key:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-
-4. Konfigurasikan database dan kredensial Midtrans di file `.env`:
-   ```env
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=sistem_kasir
-   DB_USERNAME=root
-   DB_PASSWORD=
-
-   # Kredensial Sandbox Midtrans
-   MIDTRANS_SERVER_KEY=SB-Mid-server-xxxxxxxxx
-   MIDTRANS_CLIENT_KEY=SB-Mid-client-xxxxxxxxx
-   MIDTRANS_IS_PRODUCTION=false
-   ```
-
-5. Jalankan migrasi dan seeder database:
-   ```bash
-   php artisan migrate --seed
-   ```
-
-6. Jalankan server backend:
-   ```bash
-   php artisan serve
-   ```
-   *Default API URL:* `http://localhost:8000/api` (atau via virtual host Laragon)
-
----
+# Jalankan server API:
+php artisan serve
+```
 
 ### 2. Setup Frontend (Nuxt 4)
 
-1. Buka terminal baru dan masuk ke direktori `frontend`:
-   ```bash
-   cd frontend
-   ```
+```bash
+cd frontend
+npm install
 
-2. Install dependensi Node.js:
-   ```bash
-   npm install
-   ```
-
-3. Konfigurasikan environment variable (opsional, sesuaikan URL backend):
-   Buat file `.env` di folder `frontend` jika diperlukan:
-   ```env
-   NUXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
-   NUXT_PUBLIC_MIDTRANS_CLIENT_KEY=SB-Mid-client-xxxxxxxxx
-   ```
-
-4. Jalankan server frontend mode development:
-   ```bash
-   npm run dev
-   ```
-
-5. Buka browser dan akses aplikasi kasir di:
-   ```text
-   http://localhost:3000
-   ```
+# Jalankan server development:
+npm run dev
+```
+Akses aplikasi melalui browser di: `http://localhost:3000`
 
 ---
 
-## 💳 Konfigurasi Pembayaran Midtrans (Sandbox)
+## 📡 Ringkasan Endpoint API
 
-1. Daftar akun di [Midtrans Sandbox](https://dashboard.sandbox.midtrans.com/).
-2. Salin **Server Key** dan **Client Key** dari menu *Settings > Access Keys*.
-3. Masukkan keys ke file `.env` di backend dan frontend.
-4. Untuk pengujian webhook di local environment, gunakan tunneling tools seperti [Ngrok](https://ngrok.com/) untuk meneruskan webhook ke `http://your-domain/api/payment/webhook`.
+### Autentikasi
+- `POST /api/login` — Autentikasi pengguna & pengembalian token Sanctum serta data role.
+- `POST /api/logout` — Pencabutan token & pencatatan log logout.
+- `GET /api/user` — Mendapatkan profil user yang sedang aktif.
 
----
+### Manajemen Kasir & Barang (Staff Kasir)
+- `GET /api/barang` — Daftar katalog produk.
+- `POST /api/barang` — Tambah produk baru.
+- `POST /api/barang/bulk` — Input massal / import spreadsheet.
+- `PUT /api/barang/{id}` — Update data produk.
+- `POST /api/barang/{id}/tambah-stok` — Tambah stok barang masuk.
+- `DELETE /api/barang/{id}` — Hapus produk dari inventori.
+- `GET /api/transaksi` — Riwayat transaksi penjualan.
+- `POST /api/transaksi` — Pembuatan transaksi kasir baru.
+- `POST /api/payment/snap` — Pembuatan token Midtrans Snap.
+- `POST /api/print` — Perintah cetak struk ESC/POS.
 
-## 🖨️ Konfigurasi Thermal Printer
-
-Aplikasi menggunakan library `mike42/escpos-php` untuk komunikasi langsung dengan printer kasir.
-- Pastikan printer thermal USB/Network telah terpasang dan dikenali oleh OS.
-- Atur nama printer pada controller `backend/app/Http/Controllers/PrintController.php` sesuai dengan printer sharing name Anda.
+### Administrasi (Khusus Admin - Middleware `admin`)
+- `POST /api/transaksi/{id}/batal` — Membatalkan transaksi & mengembalikan stok.
+- `DELETE /api/transaksi/{id}` — Hapus arsip transaksi.
+- `GET /api/activity-logs` — Mengambil daftar log linimasa aktivitas pengguna.
+- `DELETE /api/activity-logs` — Membersihkan seluruh log aktivitas.
+- `GET /api/users` — Daftar seluruh akun pengguna.
+- `POST /api/users` — Membuat akun pengguna baru.
+- `PUT /api/users/{id}` — Mengedit nama, email, dan mengubah role.
+- `POST /api/users/{id}/reset-password` — Mereset password akun pengguna.
+- `DELETE /api/users/{id}` — Menghapus akun pengguna.
 
 ---
 
 ## 📄 Lisensi
 
-Project ini dikembangkan untuk kebutuhan operasional kasir dan bebas dikembangkan lebih lanjut.
+Project ini dikembangkan untuk kebutuhan operasional point of sales dan bebas dikembangkan lebih lanjut.

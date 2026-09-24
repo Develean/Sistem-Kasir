@@ -8,6 +8,8 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ActivityController;
 
 // Public route (login)
 Route::post('/login', [AuthController::class, 'login']);
@@ -26,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Manajemen Barang
+    // Manajemen Barang (Dikelola oleh Staff Kasir)
     Route::get('/barang', [BarangController::class, 'index']);
     Route::post('/barang', [BarangController::class, 'store']);
     Route::post('/barang/bulk', [BarangController::class, 'bulkStore']);
@@ -37,18 +39,34 @@ Route::middleware('auth:sanctum')->group(function () {
     // Manajemen Transaksi Kasir
     Route::get('/transaksi', [TransaksiController::class, 'index']);
     Route::post('/transaksi', [TransaksiController::class, 'store']);
-    Route::post('/transaksi/{id}/batal', [TransaksiController::class, 'batal']);
-    Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy']);
 
-    // Payment Gateway Midtrans (Snap, Status Check, Simulasi & Batal)
+    // Payment Gateway Midtrans (Snap, Status Check, Simulasi)
     Route::post('/payment/snap', [PaymentController::class, 'createSnap']);
     Route::get('/payment/{noNota}/status', [PaymentController::class, 'checkStatus']);
     Route::post('/payment/{noNota}/simulasi-sukses', [PaymentController::class, 'simulasiSukses']);
-    Route::post('/payment/{noNota}/batal', [PaymentController::class, 'batal']);
 
     // Cetak Struk ESC/POS
     Route::post('/print', [PrintController::class, 'print']);
 
     // CRUD Data Pelengkap
     Route::apiResource('data', DataController::class);
+
+    // Route Sensitif Khusus Admin
+    Route::middleware('admin')->group(function () {
+        Route::post('/transaksi/{id}/batal', [TransaksiController::class, 'batal']);
+        Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy']);
+        Route::post('/payment/{noNota}/batal', [PaymentController::class, 'batal']);
+
+        // Manajemen Pengguna (CRUD Users)
+        Route::get('/users', [UserController::class, 'index']);
+        Route::post('/users', [UserController::class, 'store']);
+        Route::get('/users/{id}', [UserController::class, 'show']);
+        Route::put('/users/{id}', [UserController::class, 'update']);
+        Route::post('/users/{id}/reset-password', [UserController::class, 'resetPassword']);
+        Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+        // Activity User Logs (Khusus Admin)
+        Route::get('/activity-logs', [ActivityController::class, 'index']);
+        Route::delete('/activity-logs', [ActivityController::class, 'clear']);
+    });
 });

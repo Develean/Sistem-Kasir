@@ -178,7 +178,7 @@
                   🖨️ Cetak Ulang
                 </button>
                 <button
-                  v-if="trx.status !== 'dibatalkan'"
+                  v-if="trx.status !== 'dibatalkan' && isAdmin"
                   @click="batalkanTransaksi(trx)"
                   :disabled="cancellingIds.includes(trx.id)"
                   class="rounded-lg bg-rose-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-rose-500 active:scale-95 disabled:cursor-not-allowed disabled:bg-rose-300"
@@ -317,11 +317,12 @@
 </style>
 
 <script setup>
+import { useAuth } from '../composables/useAuth'
 import { useToast } from '../composables/useToast'
 
 definePageMeta({ middleware: 'auth' })
 
-const token = useCookie('token')
+const { token, isAdmin } = useAuth()
 const runtimeConfig = useRuntimeConfig()
 const apiBaseUrl = runtimeConfig.public.apiBaseUrl.replace(/\/+$/, '')
 const { show: showToast } = useToast()

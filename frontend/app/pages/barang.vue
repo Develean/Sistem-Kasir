@@ -724,11 +724,12 @@ BRG002	Teh Manis	Minuman	2000	4000	40"
 </template>
 
 <script setup>
+import { useAuth } from '../composables/useAuth'
 import { useToast } from '../composables/useToast'
 
 definePageMeta({ middleware: 'auth' })
 
-const token = useCookie('token')
+const { token, isKasir } = useAuth()
 const runtimeConfig = useRuntimeConfig()
 const apiBaseUrl = runtimeConfig.public.apiBaseUrl.replace(/\/+$/, '')
 const { show: showToast } = useToast()
@@ -1202,6 +1203,11 @@ const simpanBulkBarang = async () => {
 onMounted(() => {
   if (!token.value) {
     navigateTo('/')
+    return
+  }
+  if (!isKasir.value) {
+    showToast('Akses ditolak: Menu Kelola Barang hanya untuk Staff Kasir.', 'warning')
+    navigateTo('/kasir')
     return
   }
   loadBarang()

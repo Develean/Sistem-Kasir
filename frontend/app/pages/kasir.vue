@@ -687,11 +687,12 @@
 </style>
 
 <script setup>
+import { useAuth } from '../composables/useAuth'
 import { useToast } from '../composables/useToast'
 
 definePageMeta({ middleware: 'auth' })
 
-const token = useCookie('token')
+const { token, isKasir, isAdmin } = useAuth()
 const userCookie = useCookie('user')
 const runtimeConfig = useRuntimeConfig()
 const apiBaseUrl = runtimeConfig.public.apiBaseUrl.replace(/\/+$/, '')
@@ -1259,6 +1260,11 @@ const handleKeydown = (e) => {
 onMounted(() => {
   if (!token.value) {
     navigateTo('/')
+    return
+  }
+  if (isAdmin.value) {
+    showToast('Halaman Kasir hanya untuk Staff Kasir.', 'info')
+    navigateTo('/activity')
     return
   }
   loadBarang()

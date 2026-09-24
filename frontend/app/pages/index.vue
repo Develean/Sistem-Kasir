@@ -72,6 +72,7 @@
 </template>
 
 <script setup>
+import { useAuth } from '../composables/useAuth'
 import { useToast } from '../composables/useToast'
 
 definePageMeta({
@@ -79,6 +80,7 @@ definePageMeta({
   middleware: ['guest']
 })
 
+const { setAuth } = useAuth()
 const runtimeConfig = useRuntimeConfig()
 const apiBaseUrl = runtimeConfig.public.apiBaseUrl.replace(/\/+$/, '')
 const { show: showToast } = useToast()
@@ -96,14 +98,16 @@ const handleLogin = async () => {
       body: form.value
     })
 
-    const tokenCookie = useCookie('token', { maxAge: 60 * 60 * 24 * 7 })
-    tokenCookie.value = res.token
+    setAuth(res.user, res.token)
 
-    const userCookie = useCookie('user', { maxAge: 60 * 60 * 24 * 7 })
-    userCookie.value = JSON.stringify(res.user)
+    const userRole = String(res.user?.role || 'kasir').toLowerCase().trim()
+    showToast(`Login berhasil! Selamat datang, ${res.user?.name || 'Pengguna'} (${userRole}).`, 'success')
 
-    showToast(`Login berhasil! Selamat datang, ${res.user?.name || 'Kasir'}.`, 'success')
-    navigateTo('/kasir')
+    if (userRole === 'admin') {
+      navigateTo('/activity')
+    } else {
+      navigateTo('/kasir')
+    }
   } catch (err) {
     console.error('Login error:', err)
     const message = err.data?.message || 'Email atau Password salah!'

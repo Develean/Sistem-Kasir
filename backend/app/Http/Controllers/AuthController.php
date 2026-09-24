@@ -27,6 +27,14 @@ class AuthController extends Controller
         // Hapus token lama jika ada agar bersih, lalu buat token baru
         $token = $user->createToken('kasir_token')->plainTextToken;
 
+        // Catat aktivitas login
+        \App\Models\ActivityLog::record(
+            $user,
+            'login',
+            "Pengguna {$user->name} ({$user->role}) berhasil masuk ke sistem",
+            $request
+        );
+
         return response()->json([
             'message' => 'Login Berhasil!',
             'token'   => $token,
@@ -34,12 +42,23 @@ class AuthController extends Controller
                 'id'    => $user->id,
                 'name'  => $user->name,
                 'email' => $user->email,
+                'role'  => $user->role ?? 'kasir',
             ]
         ], 200);
     }
 
     public function logout(Request $request)
     {
+        $user = $request->user();
+        if ($user) {
+            \App\Models\ActivityLog::record(
+                $user,
+                'logout',
+                "Pengguna {$user->name} keluar dari sistem",
+                $request
+            );
+        }
+
         if ($request->user() && $request->user()->currentAccessToken()) {
             $request->user()->currentAccessToken()->delete();
         }

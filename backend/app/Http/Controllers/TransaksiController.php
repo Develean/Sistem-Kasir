@@ -152,6 +152,15 @@ class TransaksiController extends Controller
                 ]);
             });
 
+            if ($transaksi) {
+                \App\Models\ActivityLog::record(
+                    $request->user() ?: ($transaksi->kasir ?? 'Kasir'),
+                    'transaksi',
+                    "Membuat transaksi POS #{$transaksi->no_nota} senilai Rp " . number_format($transaksi->total, 0, ',', '.') . " (" . strtoupper($transaksi->metode_pembayaran) . ")",
+                    $request
+                );
+            }
+
             return response()->json([
                 'message' => 'Transaksi berhasil diproses',
                 'data'    => $transaksi
@@ -195,6 +204,13 @@ class TransaksiController extends Controller
 
                 return $trx;
             });
+
+            \App\Models\ActivityLog::record(
+                request()->user() ?: 'Admin',
+                'batal_transaksi',
+                "Membatalkan (void) transaksi #{$transaksi->no_nota} dan mengembalikan stok produk",
+                request()
+            );
 
             return response()->json([
                 'message' => 'Transaksi berhasil dibatalkan dan stok produk telah dikembalikan.',
