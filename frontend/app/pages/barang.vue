@@ -1205,11 +1205,6 @@ onMounted(() => {
     navigateTo('/')
     return
   }
-  if (!isKasir.value) {
-    showToast('Akses ditolak: Menu Kelola Barang hanya untuk Staff Kasir.', 'warning')
-    navigateTo('/kasir')
-    return
-  }
   loadBarang()
 })
 </script>

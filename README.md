@@ -12,7 +12,7 @@ Aplikasi memisahkan antarmuka dan hak akses secara ketat antara **Administrator*
 |---|:---:|:---:|
 | 📈 **Dashboard Ringkasan & Grafik** | ❌ Disembunyikan | ✅ Akses Penuh (Halaman Utama) |
 | 🛒 **Halaman Kasir (POS)** | ✅ Akses Penuh (Halaman Utama) | ❌ Disembunyikan |
-| 📦 **Kelola Barang & Inventori** | ✅ Akses Penuh | ❌ Disembunyikan |
+| 📦 **Kelola Barang & Inventori** | ✅ Akses Penuh | ✅ Akses Penuh |
 | 📊 **Activity User Log** | ❌ Disembunyikan | ✅ Akses Penuh |
 | 👥 **Kelola Pengguna (CRUD Users)** | ❌ Disembunyikan | ✅ Akses Penuh |
 | 📜 **Riwayat Transaksi & Struk** | ✅ Akses Penuh | ✅ Akses Penuh |
@@ -39,7 +39,7 @@ Aplikasi memisahkan antarmuka dan hak akses secara ketat antara **Administrator*
   - **Digital Payment Gateway (Midtrans Snap):** QRIS (GoPay, ShopeePay, OVO), Virtual Account Bank (BCA, BNI, BRI, Mandiri), dan Kartu Kredit.
 - **Cetak Struk Thermal:** Integrasi pencetakan ke printer thermal ESC/POS 58mm/80mm dan cetak browser.
 
-### 3. 📦 Manajemen Inventori & Barang (Khusus Staff Kasir)
+### 3. 📦 Manajemen Inventori & Barang (Kasir & Administrator)
 - **CRUD Produk:** Tambah, edit, dan hapus barang lengkap dengan barcode, gambar, kategori, harga modal (HPP), harga jual, dan stok.
 - **Penyesuaian Stok Cepat:** Tombol tambah stok masuk tanpa perlu edit seluruh data barang.
 - **Bulk Add & Import Massal:** Form input dinamis banyak barang sekaligus serta import massal via file CSV/Spreadsheet.
