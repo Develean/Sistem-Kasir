@@ -10,7 +10,8 @@ Aplikasi memisahkan antarmuka dan hak akses secara ketat antara **Administrator*
 
 | Fitur / Halaman | Staff Kasir | Administrator |
 |---|:---:|:---:|
-| 🛒 **Halaman Kasir (POS)** | ✅ Akses Penuh | ❌ Otomatis dialihkan ke Activity |
+| 📈 **Dashboard Ringkasan & Grafik** | ❌ Disembunyikan | ✅ Akses Penuh (Halaman Utama) |
+| 🛒 **Halaman Kasir (POS)** | ✅ Akses Penuh (Halaman Utama) | ❌ Disembunyikan |
 | 📦 **Kelola Barang & Inventori** | ✅ Akses Penuh | ❌ Disembunyikan |
 | 📊 **Activity User Log** | ❌ Disembunyikan | ✅ Akses Penuh |
 | 👥 **Kelola Pengguna (CRUD Users)** | ❌ Disembunyikan | ✅ Akses Penuh |
@@ -21,7 +22,15 @@ Aplikasi memisahkan antarmuka dan hak akses secara ketat antara **Administrator*
 
 ## 🚀 Fitur Lengkap
 
-### 1. 🛒 Kasir & Transaksi POS (Khusus Staff Kasir)
+### 1. 📈 Dashboard Eksekutif Admin (Khusus Administrator)
+- **Omzet Real-time:** Pemantauan omzet hari ini dan bulan ini beserta persentase perbandingan periode sebelumnya (kemarin & bulan lalu).
+- **Volume & Total Transaksi:** Ringkasan jumlah transaksi hari ini, bulan ini, serta total transaksi selesai keseluruhan.
+- **Peringatan Stok Kritis:** Deteksi dini barang dengan stok menipis (sisa ≤ 5 unit) atau habis (0) untuk kebutuhan restock cepat.
+- **5 Produk Terlaris (Best Seller):** Peringkat produk dengan penjualan terbanyak lengkap dengan nominal omzet dan persentase kontribusi volume penjualan.
+- **Grafik Interaktif:** Visualisasi tren pendapatan harian dan jumlah transaksi (7 Hari / 30 Hari Terakhir) lengkap dengan tooltip interaktif saat di-hover.
+- **Distribusi Pembayaran:** Ringkasan metode pembayaran yang digunakan pelanggan (Tunai, QRIS, Midtrans/Transfer).
+
+### 2. 🛒 Kasir & Transaksi POS (Khusus Staff Kasir)
 - **Katalog Produk Interaktif:** Pencarian instan, filter kategori (*category chips*), dan pengurutan (nama, harga, stok).
 - **Auto-Hide Out of Stock:** Produk dengan stok habis otomatis disembunyikan dari katalog transaksi kasir.
 - **Kalkulasi Otomatis:** Perhitungan subtotal, diskon, pajak, dan nominal uang kembalian instan.
@@ -30,12 +39,12 @@ Aplikasi memisahkan antarmuka dan hak akses secara ketat antara **Administrator*
   - **Digital Payment Gateway (Midtrans Snap):** QRIS (GoPay, ShopeePay, OVO), Virtual Account Bank (BCA, BNI, BRI, Mandiri), dan Kartu Kredit.
 - **Cetak Struk Thermal:** Integrasi pencetakan ke printer thermal ESC/POS 58mm/80mm dan cetak browser.
 
-### 2. 📦 Manajemen Inventori & Barang (Khusus Staff Kasir)
+### 3. 📦 Manajemen Inventori & Barang (Khusus Staff Kasir)
 - **CRUD Produk:** Tambah, edit, dan hapus barang lengkap dengan barcode, gambar, kategori, harga modal (HPP), harga jual, dan stok.
 - **Penyesuaian Stok Cepat:** Tombol tambah stok masuk tanpa perlu edit seluruh data barang.
 - **Bulk Add & Import Massal:** Form input dinamis banyak barang sekaligus serta import massal via file CSV/Spreadsheet.
 
-### 3. 📊 Activity User Log (Khusus Administrator)
+### 4. 📊 Activity User Log (Khusus Administrator)
 - **Pemantauan Linimasa Aktivitas:** Mencatat setiap aktivitas penting sistem secara real-time:
   - 🔐 Login & Logout pengguna (beserta alamat IP client).
   - 🛒 Pembuatan transaksi POS baru beserta nominal dan metode bayar.
@@ -44,12 +53,12 @@ Aplikasi memisahkan antarmuka dan hak akses secara ketat antara **Administrator*
   - 👥 Penambahan akun, perubahan role, dan reset password.
 - **Filter & Statistik:** Ringkasan total aktivitas, aktivitas hari ini, filter berdasarkan role, kategori aksi, dan tanggal.
 
-### 4. 👥 Manajemen Pengguna (Khusus Administrator)
+### 5. 👥 Manajemen Pengguna (Khusus Administrator)
 - **Kelola Akun:** Melihat daftar semua pengguna sistem, menambah akun baru, mengedit profil, dan mengganti role (*Admin / Kasir*).
 - **Reset Password:** Mengubah password akun staf kasir secara langsung.
 - **Proteksi Akun:** Mencegah administrator menghapus atau menurunkan (*demote*) role akunnya sendiri yang sedang aktif.
 
-### 5. 📜 Riwayat Transaksi & Pelaporan
+### 6. 📜 Riwayat Transaksi & Pelaporan
 - Pencatatan seluruh transaksi penjualan lengkap dengan status (*Pending, Lunas, Dibatalkan*).
 - Filter transaksi berdasarkan rentang tanggal, status, dan metode pembayaran.
 - Cetak ulang struk transaksi dan pembatalan (*void*) dengan pengembalian stok otomatis.
@@ -180,6 +189,7 @@ Akses aplikasi melalui browser di: `http://localhost:3000`
 - `POST /api/print` — Perintah cetak struk ESC/POS.
 
 ### Administrasi (Khusus Admin - Middleware `admin`)
+- `GET /api/dashboard/stats` — Statistik ringkasan toko (omzet, transaksi, stok kritis, produk terlaris, grafik, dan metode pembayaran).
 - `POST /api/transaksi/{id}/batal` — Membatalkan transaksi & mengembalikan stok.
 - `DELETE /api/transaksi/{id}` — Hapus arsip transaksi.
 - `GET /api/activity-logs` — Mengambil daftar log linimasa aktivitas pengguna.

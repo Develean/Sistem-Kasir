@@ -10,6 +10,7 @@ use App\Http\Controllers\PrintController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\DashboardController;
 
 // Public route (login)
 Route::post('/login', [AuthController::class, 'login']);
@@ -68,5 +69,8 @@ Route::middleware('auth:sanctum')->group(function () {
         // Activity User Logs (Khusus Admin)
         Route::get('/activity-logs', [ActivityController::class, 'index']);
         Route::delete('/activity-logs', [ActivityController::class, 'clear']);
+
+        // Dashboard Stats (Khusus Admin)
+        Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
     });
 });

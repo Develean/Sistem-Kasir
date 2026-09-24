@@ -104,7 +104,7 @@ const handleLogin = async () => {
     showToast(`Login berhasil! Selamat datang, ${res.user?.name || 'Pengguna'} (${userRole}).`, 'success')
 
     if (userRole === 'admin') {
-      navigateTo('/activity')
+      navigateTo('/dashboard')
     } else {
       navigateTo('/kasir')
     }

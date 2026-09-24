@@ -26,6 +26,17 @@
             Halaman Kasir
           </NuxtLink>
 
+          <!-- Menu Dashboard: Hanya terlihat untuk Admin -->
+          <NuxtLink
+            v-if="isAdmin"
+            to="/dashboard"
+            :class="route.path === '/dashboard' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
+            class="rounded-full px-4 py-2 text-sm font-semibold transition flex items-center gap-1.5"
+          >
+            <span>Dashboard</span>
+            <span class="rounded-full bg-indigo-400/20 px-1.5 py-0.2 text-[9px] font-bold text-indigo-300 uppercase">Admin</span>
+          </NuxtLink>
+
           <!-- Menu Activity User: Hanya terlihat untuk Admin -->
           <NuxtLink
             v-if="isAdmin"
@@ -128,6 +139,18 @@
         <span class="text-xl">🛒</span>
         <span>Kasir</span>
         <span v-if="route.path === '/kasir'" class="absolute -bottom-1 h-1 w-6 rounded-full bg-indigo-500"></span>
+      </NuxtLink>
+
+      <!-- Menu Dashboard Mobile: Hanya untuk Admin -->
+      <NuxtLink
+        v-if="isAdmin"
+        to="/dashboard"
+        :class="route.path === '/dashboard' ? 'text-indigo-400 font-bold' : 'text-slate-400 font-medium hover:text-slate-200'"
+        class="flex flex-col items-center gap-1 px-3 py-1 text-[11px] transition relative"
+      >
+        <span class="text-xl">📈</span>
+        <span>Dashboard</span>
+        <span v-if="route.path === '/dashboard'" class="absolute -bottom-1 h-1 w-6 rounded-full bg-indigo-500"></span>
       </NuxtLink>
 
       <!-- Menu Activity User Mobile: Hanya untuk Admin -->
