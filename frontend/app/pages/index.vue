@@ -4,9 +4,10 @@
       <div class="grid lg:grid-cols-[1.05fr_0.95fr]">
         <div class="flex flex-col justify-between bg-slate-900 p-6 sm:p-8 lg:p-12 text-white">
           <div>
-            <div class="mb-4 sm:mb-6 inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs sm:text-sm text-slate-200">
-              <span class="mr-2 text-base sm:text-lg">🛒</span>
-              Sistem Kasir Toko Sejahtra
+            <div class="mb-4 sm:mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs sm:text-sm text-slate-200">
+              <img v-if="logoToko" :src="logoToko" alt="Logo" class="h-5 w-5 rounded object-cover bg-white" />
+              <span v-else class="text-base sm:text-lg">🛒</span>
+              <span>Sistem Kasir {{ namaToko }}</span>
             </div>
             <h1 class="text-xl sm:text-3xl font-bold leading-tight tracking-tight">Kelola transaksi kasir dengan cepat, akurat, dan aman.</h1>
             <p class="mt-2 sm:mt-4 max-w-md text-xs sm:text-sm leading-relaxed text-slate-300">
@@ -81,9 +82,14 @@ definePageMeta({
 })
 
 const { setAuth } = useAuth()
+const { namaToko, logoToko, loadSetting } = useToko()
 const runtimeConfig = useRuntimeConfig()
 const apiBaseUrl = runtimeConfig.public.apiBaseUrl.replace(/\/+$/, '')
 const { show: showToast } = useToast()
+
+onMounted(() => {
+  loadSetting()
+})
 
 const form = ref({ email: '', password: '' })
 const isSubmittingLogin = ref(false)

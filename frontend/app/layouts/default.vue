@@ -7,11 +7,22 @@
       <div class="space-y-6">
         <!-- Logo & Branding Toko -->
         <div class="flex items-center gap-3 px-2 py-1">
-          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-500/20 text-2xl shadow-inner border border-indigo-500/30">
+          <img
+            v-if="logoToko"
+            :src="logoToko"
+            alt="Logo Toko"
+            class="h-11 w-11 shrink-0 rounded-2xl object-cover shadow-inner border border-indigo-500/30 bg-white"
+          />
+          <div
+            v-else
+            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-500/20 text-2xl shadow-inner border border-indigo-500/30"
+          >
             🛒
           </div>
           <div class="min-w-0">
-            <h1 class="text-base xl:text-lg font-extrabold tracking-tight text-white leading-tight truncate">TOKO SEJAHTRA</h1>
+            <h1 class="text-base xl:text-lg font-extrabold tracking-tight text-white leading-tight truncate">
+              {{ namaToko }}
+            </h1>
             <p class="text-[11px] text-indigo-300 font-medium">Sistem Kasir & POS</p>
           </div>
         </div>
@@ -122,6 +133,17 @@
                 <span class="flex-1">Kelola Pengguna</span>
                 <span class="rounded bg-indigo-400/20 px-1.5 py-0.2 text-[9px] font-bold text-indigo-300 uppercase">Admin</span>
               </NuxtLink>
+
+              <!-- Menu Pengaturan Toko: Khusus Admin -->
+              <NuxtLink
+                to="/settings"
+                :class="route.path === '/settings' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-bold' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
+                class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs xl:text-sm font-medium transition group"
+              >
+                <span class="text-lg">⚙️</span>
+                <span class="flex-1">Pengaturan Toko</span>
+                <span class="rounded bg-indigo-400/20 px-1.5 py-0.2 text-[9px] font-bold text-indigo-300 uppercase">Admin</span>
+              </NuxtLink>
             </nav>
           </div>
         </div>
@@ -157,10 +179,16 @@
           </svg>
         </button>
 
-        <div class="flex items-center gap-2">
-          <span class="text-xl">🛒</span>
+        <div class="flex items-center gap-2.5">
+          <img
+            v-if="logoToko"
+            :src="logoToko"
+            alt="Logo Toko"
+            class="h-7 w-7 rounded-lg object-cover bg-white"
+          />
+          <span v-else class="text-xl">🛒</span>
           <div>
-            <h1 class="text-sm font-bold leading-tight">TOKO SEJAHTRA</h1>
+            <h1 class="text-sm font-bold leading-tight truncate max-w-[140px] sm:max-w-xs">{{ namaToko }}</h1>
             <p class="text-[9px] text-indigo-300">Point of Sales</p>
           </div>
         </div>
@@ -204,9 +232,15 @@
           <!-- Header Drawer -->
           <div class="flex items-center justify-between pb-4 border-b border-slate-800">
             <div class="flex items-center gap-2.5">
-              <span class="text-2xl">🛒</span>
+              <img
+                v-if="logoToko"
+                :src="logoToko"
+                alt="Logo Toko"
+                class="h-8 w-8 rounded-xl object-cover bg-white"
+              />
+              <span v-else class="text-2xl">🛒</span>
               <div>
-                <h2 class="text-sm font-bold text-white">TOKO SEJAHTRA</h2>
+                <h2 class="text-sm font-bold text-white truncate max-w-[150px]">{{ namaToko }}</h2>
                 <p class="text-[10px] text-indigo-300">Menu Navigasi</p>
               </div>
             </div>
@@ -294,6 +328,16 @@
               >
                 <span class="text-lg">👥</span>
                 <span>Kelola Pengguna</span>
+              </NuxtLink>
+
+              <NuxtLink
+                to="/settings"
+                @click="isMobileSidebarOpen = false"
+                :class="route.path === '/settings' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-300 hover:bg-white/10'"
+                class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition"
+              >
+                <span class="text-lg">⚙️</span>
+                <span>Pengaturan Toko</span>
               </NuxtLink>
             </div>
           </nav>
@@ -397,12 +441,18 @@
 <script setup>
 import { useAuth } from '../composables/useAuth'
 import { useToast } from '../composables/useToast'
+import { useToko } from '../composables/useToko'
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const apiBaseUrl = runtimeConfig.public.apiBaseUrl.replace(/\/+$/, '')
 const { show: showToast } = useToast()
 const { user, token, role, isAdmin, isKasir, clearAuth } = useAuth()
+const { namaToko, logoToko, loadSetting } = useToko()
+
+onMounted(() => {
+  loadSetting()
+})
 
 const isMobileSidebarOpen = ref(false)
 

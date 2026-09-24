@@ -99,29 +99,33 @@ Sistem-kasir/
 │   │       ├── User.php                    # Model User (Role: Admin / Kasir)
 │   │       ├── Barang.php                  # Model Produk & Stok
 │   │       ├── Transaksi.php               # Model Penjualan & Pembayaran
-│   │       └── ActivityLog.php             # Model Pencatatan Log Aktivitas
+│   │       ├── ActivityLog.php             # Model Pencatatan Log Aktivitas
+│   │       └── TokoSetting.php             # Model Pengaturan Profil Toko & Struk
 │   ├── database/
-│   │   ├── migrations/                     # Migrasi tabel users, barangs, transaksis, activity_logs
+│   │   ├── migrations/                     # Migrasi users, barangs, transaksis, activity_logs, toko_settings
 │   │   └── seeders/
 │   │       ├── UserSeeder.php              # Akun default admin & kasir
 │   │       ├── ActivityLogSeeder.php       # Contoh awal riwayat aktivitas
 │   │       └── DatabaseSeeder.php
-│   ├── routes/api.php                      # Endpoint API RESTful
-│   └── Dockerfile
+│   ├── routes/api.php                      # Endpoint API RESTful & Setting Toko
+│   ├── Dockerfile
 ├── frontend/
 │   ├── app/
 │   │   ├── composables/
 │   │   │   ├── useAuth.js                  # State management user, role, token & helper isAdmin/isKasir
-│   │   │   └── useToast.js                 # Notifikasi toast global
+│   │   │   ├── useToast.js                 # Notifikasi toast global
+│   │   │   └── useToko.js                  # Profil toko reaktif (Nama, Alamat, Telp, Logo, Footer Struk)
 │   │   ├── layouts/
-│   │   │   └── default.vue                 # Header navbar responsif dengan filter menu role
+│   │   │   └── default.vue                 # Header navbar responsif & dynamic branding logo/nama toko
 │   │   └── pages/
 │   │       ├── index.vue                   # Login dengan routing otomatis sesuai role
 │   │       ├── kasir.vue                   # Antarmuka Transaksi POS (Kasir Only)
-│   │       ├── barang.vue                  # Manajemen Katalog & Stok (Kasir Only)
+│   │       ├── barang.vue                  # Manajemen Katalog & Stok (Kasir & Admin)
 │   │       ├── riwayat.vue                 # Riwayat Penjualan & Cetak Struk (Kasir & Admin)
+│   │       ├── dashboard.vue               # Dashboard Metrik & Analitik Penjualan (Admin Only)
 │   │       ├── activity.vue                # Linimasa Activity User (Admin Only)
-│   │       └── users.vue                   # Kelola Pengguna & Reset Password (Admin Only)
+│   │       ├── users.vue                   # Kelola Pengguna & Reset Password (Admin Only)
+│   │       └── settings.vue                # Pengaturan Profil Toko, Logo & Footer Struk (Admin Only)
 │   └── nuxt.config.ts                      # Konfigurasi Nuxt & Midtrans SDK
 └── README.md
 ```
@@ -134,8 +138,8 @@ Setelah menjalankan seeder database, Anda dapat langsung login menggunakan akun 
 
 | Role | Email | Password | Hak Akses Utama |
 |---|---|---|---|
-| **Administrator** | `admin@gmail.com` | `admin123` | Activity User, Riwayat Penjualan, Kelola Pengguna, Void Transaksi |
-| **Staff Kasir** | `kasir@gmail.com` | `kasir123` | Halaman Kasir POS, Kelola Inventori Barang, Riwayat Transaksi |
+| **Administrator** | `admin@gmail.com` | `admin123` | Dashboard Statistik, Kelola Pengguna, Activity User, Pengaturan Profil Toko & Struk, Kelola Barang, Riwayat Penjualan, Void Transaksi |
+| **Staff Kasir** | `kasir@gmail.com` | `kasir123` | Halaman Kasir POS, Kelola Inventori Barang, Riwayat Transaksi & Cetak Struk |
 
 ---
 

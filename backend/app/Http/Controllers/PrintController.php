@@ -40,9 +40,16 @@ class PrintController extends Controller
 
             $printer = new \Mike42\Escpos\Printer($connector);
 
+            $setting = \App\Models\TokoSetting::get();
+
             $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
-            $printer->text("TOKO SEJAHTRA\n");
-            $printer->text("Alamat: Jl. Sejahtera No.1\n");
+            $printer->text(($setting->nama_toko ?: 'TOKO SEJAHTRA') . "\n");
+            if (!empty($setting->alamat)) {
+                $printer->text("Alamat: " . $setting->alamat . "\n");
+            }
+            if (!empty($setting->telepon)) {
+                $printer->text("Telp: " . $setting->telepon . "\n");
+            }
             $printer->text("No: " . ($data['noStruk'] ?? '-') . "\n");
             if (!empty($data['nama_pelanggan'])) {
                 $printer->text("Pelanggan: " . $data['nama_pelanggan'] . "\n");

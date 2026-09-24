@@ -11,6 +11,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SettingController;
 
 // Public route (login)
 Route::post('/login', [AuthController::class, 'login']);
@@ -20,6 +21,9 @@ Route::get('/login', function () {
 
 // Public Webhook Callback Midtrans (tanpa auth sanctum / CSRF)
 Route::post('/payment/webhook', [PaymentController::class, 'webhook']);
+
+// Profil Toko (Bisa dibaca publik & kasir untuk nama struk/tampilan)
+Route::get('/setting', [SettingController::class, 'index']);
 
 // Protected routes (semua akses kasir & barang wajib menyertakan token Sanctum)
 Route::middleware('auth:sanctum')->group(function () {
@@ -72,5 +76,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Dashboard Stats (Khusus Admin)
         Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+
+        // Pengaturan Profil Toko (Khusus Admin)
+        Route::post('/setting', [SettingController::class, 'update']);
+        Route::put('/setting', [SettingController::class, 'update']);
     });
 });

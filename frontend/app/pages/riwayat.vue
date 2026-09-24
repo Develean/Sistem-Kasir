@@ -213,8 +213,15 @@
     <div v-if="showStruk" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4">
       <div class="print-receipt-shell w-full max-w-sm max-h-[90vh] overflow-y-auto rounded-[28px] bg-white p-5 sm:p-6 shadow-2xl">
         <div class="border-b border-dashed border-slate-300 pb-3 text-center">
-          <h3 class="text-lg font-bold text-slate-900">TOKO SEJAHTRA</h3>
-          <p class="text-xs text-slate-500">Jl. Sejahtera No. 1</p>
+          <img
+            v-if="logoToko"
+            :src="logoToko"
+            alt="Logo Toko"
+            class="mx-auto mb-2 h-12 w-12 object-contain"
+          />
+          <h3 class="text-lg font-bold text-slate-900 uppercase">{{ namaToko }}</h3>
+          <p class="text-xs text-slate-500 whitespace-pre-line">{{ alamatToko }}</p>
+          <p v-if="teleponToko" class="text-xs text-slate-500">Telp: {{ teleponToko }}</p>
           <p class="mt-1 text-[11px] text-slate-400">{{ strukData?.noStruk }} • {{ strukData?.tanggal }}</p>
           <div class="mt-1 flex justify-center gap-3 text-[11px] text-slate-600 font-medium">
             <span>Kasir: {{ strukData?.kasir }}</span>
@@ -268,6 +275,11 @@
           </div>
         </div>
 
+        <!-- Catatan Footer Struk -->
+        <div class="mt-3 border-t border-dashed border-slate-300 pt-3 text-center text-[11px] text-slate-500">
+          <p class="font-medium">{{ footerStruk }}</p>
+        </div>
+
         <div class="mt-6 flex justify-between gap-2 print:hidden">
           <button
             @click="cetakStrukBrowser"
@@ -319,10 +331,12 @@
 <script setup>
 import { useAuth } from '../composables/useAuth'
 import { useToast } from '../composables/useToast'
+import { useToko } from '../composables/useToko'
 
 definePageMeta({ middleware: 'auth' })
 
 const { token, isAdmin } = useAuth()
+const { namaToko, alamatToko, teleponToko, logoToko, footerStruk, loadSetting } = useToko()
 const runtimeConfig = useRuntimeConfig()
 const apiBaseUrl = runtimeConfig.public.apiBaseUrl.replace(/\/+$/, '')
 const { show: showToast } = useToast()
@@ -517,5 +531,6 @@ onMounted(() => {
     return
   }
   loadRiwayat()
+  loadSetting()
 })
 </script>
