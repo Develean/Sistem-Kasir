@@ -40,11 +40,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // Manajemen Transaksi Kasir
     Route::get('/transaksi', [TransaksiController::class, 'index']);
     Route::post('/transaksi', [TransaksiController::class, 'store']);
+    Route::post('/transaksi/{id}/batal', [TransaksiController::class, 'batal']);
 
-    // Payment Gateway Midtrans (Snap, Status Check, Simulasi)
+    // Payment Gateway Midtrans (Snap, Status Check, Simulasi, Batal)
     Route::post('/payment/snap', [PaymentController::class, 'createSnap']);
     Route::get('/payment/{noNota}/status', [PaymentController::class, 'checkStatus']);
     Route::post('/payment/{noNota}/simulasi-sukses', [PaymentController::class, 'simulasiSukses']);
+    Route::post('/payment/{noNota}/batal', [PaymentController::class, 'batal']);
 
     // Cetak Struk ESC/POS
     Route::post('/print', [PrintController::class, 'print']);
@@ -54,9 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Route Sensitif Khusus Admin
     Route::middleware('admin')->group(function () {
-        Route::post('/transaksi/{id}/batal', [TransaksiController::class, 'batal']);
         Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy']);
-        Route::post('/payment/{noNota}/batal', [PaymentController::class, 'batal']);
 
         // Manajemen Pengguna (CRUD Users)
         Route::get('/users', [UserController::class, 'index']);

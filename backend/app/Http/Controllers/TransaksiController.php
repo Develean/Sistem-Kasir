@@ -177,13 +177,21 @@ class TransaksiController extends Controller
         }
     }
 
-    // Membatalkan transaksi (Void) dan mengembalikan stok barang
-    public function batal($id)
+    // Membatalkan transaksi (Void / Batal Pending) dan mengembalikan stok barang
+    public function batal(Request $request, $id)
     {
-        try {
-            $transaksi = DB::transaction(function () use ($id) {
-                $trx = Transaksi::lockForUpdate()->findOrFail($id);
+        $user = $request->user();
+        $trx = Transaksi::findOrFail($id);
 
+        // Jika transaksi sudah selesai, hanya administrator yang berhak void
+        if ($trx->status === 'selesai' && (!$user || !$user->isAdmin())) {
+            return response()->json([
+                'message' => 'Akses ditolak: Hanya Administrator yang berhak membatalkan (void) transaksi yang sudah selesai.'
+            ], 403);
+        }
+
+        try {
+            $transaksi = DB::transaction(function () use ($trx) {
                 if ($trx->status === 'dibatalkan') {
                     throw ValidationException::withMessages([
                         'transaksi' => 'Transaksi ini sudah pernah dibatalkan sebelumnya.'
@@ -205,10 +213,19 @@ class TransaksiController extends Controller
                 return $trx;
             });
 
+            // Jika transaksi menggunakan gateway Midtrans, coba batalkan di Midtrans
+            if ($transaksi->metode_pembayaran === 'midtrans') {
+                try {
+                    app(\App\Services\MidtransService::class)->cancelTransaction($transaksi->no_nota);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::warning("Gagal cancel transaksi Midtrans di gateway: " . $e->getMessage());
+                }
+            }
+
             \App\Models\ActivityLog::record(
-                request()->user() ?: 'Admin',
+                request()->user() ?: 'Kasir',
                 'batal_transaksi',
-                "Membatalkan (void) transaksi #{$transaksi->no_nota} dan mengembalikan stok produk",
+                "Membatalkan (" . ($transaksi->status === 'selesai' ? 'void' : 'batal pending') . ") transaksi #{$transaksi->no_nota} dan mengembalikan stok produk",
                 request()
             );
 

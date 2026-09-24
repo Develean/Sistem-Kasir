@@ -251,7 +251,7 @@ class PaymentController extends Controller
     }
 
     /**
-     * Membatalkan transaksi pending kasir dan mengembalikan stok produk
+     * Membatalkan transaksi kasir (Midtrans) dan mengembalikan stok produk
      */
     public function batal(string $noNota)
     {
@@ -261,8 +261,14 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
         }
 
+        // Jika transaksi sudah selesai, hanya administrator yang berhak void
         if ($transaksi->status === 'selesai') {
-            return response()->json(['message' => 'Transaksi yang sudah selesai tidak dapat dibatalkan di sini.'], 400);
+            $user = request()->user();
+            if (!$user || !$user->isAdmin()) {
+                return response()->json([
+                    'message' => 'Transaksi yang sudah selesai hanya dapat dibatalkan (void) oleh Administrator.'
+                ], 403);
+            }
         }
 
         if ($transaksi->status === 'dibatalkan') {
@@ -270,7 +276,19 @@ class PaymentController extends Controller
         }
 
         $this->batalkanOtomatis($transaksi, 'kasir_cancel');
-        $this->midtransService->cancelTransaction($noNota);
+
+        try {
+            $this->midtransService->cancelTransaction($noNota);
+        } catch (\Exception $e) {
+            Log::warning("Midtrans cancelTransaction notice: " . $e->getMessage());
+        }
+
+        \App\Models\ActivityLog::record(
+            request()->user() ?: 'Kasir',
+            'batal_transaksi',
+            "Membatalkan transaksi Midtrans #{$transaksi->no_nota} dan mengembalikan stok produk",
+            request()
+        );
 
         return response()->json([
             'message' => 'Transaksi Midtrans berhasil dibatalkan dan stok telah dikembalikan.',

@@ -528,10 +528,20 @@
               <p class="text-[11px] font-mono text-slate-400">{{ activeSnapNoNota }}</p>
             </div>
           </div>
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
-            <span class="h-2 w-2 rounded-full bg-amber-500 animate-ping"></span>
-            Pending
-          </span>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
+              <span class="h-2 w-2 rounded-full bg-amber-500 animate-ping"></span>
+              Pending
+            </span>
+            <button
+              type="button"
+              @click="batalkanSnapTransaksi"
+              class="rounded-lg p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+              title="Batalkan & Tutup"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         <div class="my-5 text-center">
@@ -1226,13 +1236,15 @@ const batalkanSnapTransaksi = async () => {
 
   isCancelling.value = true
   try {
-    await $fetch(`${apiBaseUrl}/payment/${activeSnapNoNota.value}/batal`, {
+    const res = await $fetch(`${apiBaseUrl}/payment/${activeSnapNoNota.value}/batal`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token.value}` }
     })
     stopPollingSnap()
     showSnapModal.value = false
-    showToast('Transaksi Midtrans telah dibatalkan dan stok dikembalikan.', 'info')
+    activeSnapToken.value = ''
+    activeSnapNoNota.value = ''
+    showToast(res?.message || 'Transaksi Midtrans telah dibatalkan dan stok dikembalikan.', 'info')
     await loadBarang()
   } catch (err) {
     showToast(err.data?.message || 'Gagal membatalkan transaksi', 'error')

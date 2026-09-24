@@ -178,12 +178,12 @@
                   🖨️ Cetak Ulang
                 </button>
                 <button
-                  v-if="trx.status !== 'dibatalkan' && isAdmin"
+                  v-if="trx.status !== 'dibatalkan' && (isAdmin || trx.status === 'pending')"
                   @click="batalkanTransaksi(trx)"
                   :disabled="cancellingIds.includes(trx.id)"
                   class="rounded-lg bg-rose-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-rose-500 active:scale-95 disabled:cursor-not-allowed disabled:bg-rose-300"
                 >
-                  {{ cancellingIds.includes(trx.id) ? 'Memproses...' : 'Batalkan (Void & Restock)' }}
+                  {{ cancellingIds.includes(trx.id) ? 'Memproses...' : (trx.status === 'pending' ? 'Batalkan (Restock)' : 'Batalkan (Void & Restock)') }}
                 </button>
               </div>
             </div>
