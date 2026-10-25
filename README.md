@@ -1,29 +1,29 @@
-# 🛒 Sistem Kasir Modern (POS - Point of Sale)
+# Sistem Kasir Modern (POS - Point of Sale)
 
 Aplikasi **Sistem Kasir (Point of Sale)** berbasis web yang modern, cepat, dan responsif dengan sistem **Multi-Role (Admin & Kasir)**. Dibangun menggunakan arsitektur terpisah (*decoupled architecture*): **Laravel** sebagai backend RESTful API yang aman (Sanctum) dan **Nuxt 4 / Vue 3 + Tailwind CSS** sebagai antarmuka pengguna yang interaktif.
 
 ---
 
-## 🌟 Fitur Berdasarkan Peran (Role-Based Access)
+## Matriks Hak Akses Berdasarkan Peran (Role-Based Access Control)
 
 Aplikasi memisahkan antarmuka dan hak akses secara ketat antara **Administrator** dan **Staff Kasir**:
 
 | Fitur / Halaman | Staff Kasir | Administrator |
 |---|:---:|:---:|
-| 📈 **Dashboard Ringkasan & Grafik** | ❌ Disembunyikan | ✅ Akses Penuh (Halaman Utama) |
-| 🛒 **Halaman Kasir (POS)** | ✅ Akses Penuh (Halaman Utama) | ❌ Disembunyikan |
-| 📦 **Kelola Barang & Inventori** | ✅ Akses Penuh | ✅ Akses Penuh |
-| 📜 **Riwayat Transaksi & Struk** | ✅ Akses Penuh | ✅ Akses Penuh |
-| 📊 **Activity User Log** | ❌ Disembunyikan | ✅ Akses Penuh |
-| 👥 **Kelola Pengguna (CRUD Users)** | ❌ Disembunyikan | ✅ Akses Penuh |
-| ⚙️ **Pengaturan Toko & Logo Struk** | ❌ Disembunyikan | ✅ Akses Penuh |
-| 🚫 **Batalkan (Void Transaksi)** | ❌ Disembunyikan | ✅ Diizinkan |
+| **Dashboard Ringkasan & Grafik** | Tidak Diizinkan | Akses Penuh (Halaman Utama) |
+| **Halaman Kasir (POS)** | Akses Penuh (Halaman Utama) | Tidak Diizinkan |
+| **Kelola Barang & Inventori** | Akses Penuh | Akses Penuh |
+| **Riwayat Transaksi & Struk** | Akses Penuh | Akses Penuh |
+| **Log Aktivitas Pengguna (Audit Trail)** | Tidak Diizinkan | Akses Penuh |
+| **Manajemen Pengguna (CRUD Users)** | Tidak Diizinkan | Akses Penuh |
+| **Konfigurasi Profil Toko & Struk** | Tidak Diizinkan | Akses Penuh |
+| **Pembatalan Transaksi (Void)** | Tidak Diizinkan | Diizinkan |
 
 ---
 
-## 🚀 Fitur Lengkap
+## Fitur Lengkap
 
-### 1. 📈 Dashboard Eksekutif Admin (Khusus Administrator)
+### 1. Dashboard Eksekutif Admin (Khusus Administrator)
 - **Omzet Real-time:** Pemantauan omzet hari ini dan bulan ini beserta persentase perbandingan periode sebelumnya (kemarin & bulan lalu).
 - **Volume & Total Transaksi:** Ringkasan jumlah transaksi hari ini, bulan ini, serta total transaksi selesai keseluruhan.
 - **Peringatan Stok Kritis:** Deteksi dini barang dengan stok menipis (sisa ≤ 5 unit) atau habis (0) untuk kebutuhan restock cepat.
@@ -31,13 +31,13 @@ Aplikasi memisahkan antarmuka dan hak akses secara ketat antara **Administrator*
 - **Grafik Interaktif:** Visualisasi tren pendapatan harian dan jumlah transaksi (7 Hari / 30 Hari Terakhir) lengkap dengan tooltip interaktif saat di-hover.
 - **Distribusi Pembayaran:** Ringkasan metode pembayaran yang digunakan pelanggan (Tunai, QRIS, Midtrans/Transfer).
 
-### 2. ⚙️ Pengaturan Profil Toko & Struk (Khusus Administrator)
+### 2. Pengaturan Profil Toko & Struk (Khusus Administrator)
 - **Identitas & Branding Toko Dinamis:** Mengatur Nama Toko, Alamat Lengkap, dan Nomor Telepon/WhatsApp yang otomatis tersinkronisasi ke bilah navigasi (Desktop Sidebar & Mobile Header), header struk kasir, hingga layar login.
 - **Logo Usaha Kustom:** Mendukung unggah logo format gambar (PNG, JPG, SVG, WebP) yang disimpan secara aman dalam format Base64 dan dirender otomatis pada struk dan navigasi.
 - **Pesan Footer Struk:** Mengatur pesan kustom di bagian bawah struk belanja pelanggan (misal: *“Terima kasih atas kunjungan Anda!”* atau kebijakan retur barang).
 - **Live Thermal Receipt Preview:** Simulator kertas struk belanja kasir *real-time* yang langsung menampilkan hasil cetak struk sesuai identitas dan logo yang sedang dikonfigurasikan.
 
-### 3. 🛒 Kasir & Transaksi POS (Khusus Staff Kasir)
+### 3. Kasir & Transaksi POS (Khusus Staff Kasir)
 - **Katalog Produk Interaktif:** Pencarian instan (shortcut `F2`), filter kategori (*category chips*), dan pengurutan (nama, harga, stok).
 - **Auto-Hide Out of Stock:** Produk dengan stok habis otomatis disembunyikan dari katalog transaksi kasir.
 - **Kalkulasi Otomatis:** Perhitungan subtotal, diskon, pajak, dan nominal uang kembalian instan.
@@ -47,40 +47,40 @@ Aplikasi memisahkan antarmuka dan hak akses secara ketat antara **Administrator*
 - **Cetak Struk Thermal:** Integrasi pencetakan ke printer thermal ESC/POS 58mm/80mm dan cetak browser.
 - **Dukungan Batal Transaksi:** Membatalkan transaksi kasir yang belum selesai tanpa merusak sinkronisasi data Midtrans.
 
-### 4. 📦 Manajemen Inventori & Barang (Kasir & Administrator)
+### 4. Manajemen Inventori & Barang (Kasir & Administrator)
 - **CRUD Produk:** Tambah, edit, dan hapus barang lengkap dengan barcode, gambar, kategori, harga modal (HPP), harga jual, dan stok.
 - **Penyesuaian Stok Cepat:** Tombol tambah stok masuk tanpa perlu edit seluruh data barang.
 - **Bulk Add & Import Massal:** Form input dinamis banyak barang sekaligus serta import massal via file CSV/Spreadsheet.
 
-### 5. 📊 Activity User Log (Khusus Administrator)
+### 5. Log Aktivitas Pengguna (Khusus Administrator)
 - **Pemantauan Linimasa Aktivitas:** Mencatat setiap aktivitas penting sistem secara real-time:
-  - 🔐 Login & Logout pengguna (beserta alamat IP client).
-  - 🛒 Pembuatan transaksi POS baru beserta nominal dan metode bayar.
-  - 🚫 Pembatalan (void) transaksi beserta restock produk otomatis.
-  - 📦 Penambahan, perubahan stok, dan penghapusan barang.
-  - 👥 Penambahan akun, perubahan role, dan reset password.
-  - ⚙️ Perubahan profil toko, logo, dan pengaturan struk.
+  - Login & Logout pengguna (beserta alamat IP client).
+  - Pembuatan transaksi POS baru beserta nominal dan metode bayar.
+  - Pembatalan (void) transaksi beserta restock produk otomatis.
+  - Penambahan, perubahan stok, dan penghapusan barang.
+  - Penambahan akun, perubahan role, dan reset password.
+  - Perubahan profil toko, logo, dan pengaturan struk.
 - **Filter & Statistik:** Ringkasan total aktivitas, aktivitas hari ini, filter berdasarkan role, kategori aksi, dan tanggal.
 
-### 6. 👥 Manajemen Pengguna (Khusus Administrator)
+### 6. Manajemen Pengguna (Khusus Administrator)
 - **Kelola Akun:** Melihat daftar semua pengguna sistem, menambah akun baru, mengedit profil, dan mengganti role (*Admin / Kasir*).
 - **Reset Password:** Mengubah password akun staf kasir secara langsung.
 - **Proteksi Akun:** Mencegah administrator menghapus atau menurunkan (*demote*) role akunnya sendiri yang sedang aktif.
 
-### 7. 📜 Riwayat Transaksi & Pelaporan
+### 7. Riwayat Transaksi & Pelaporan
 - Pencatatan seluruh transaksi penjualan lengkap dengan status (*Pending, Lunas, Dibatalkan*).
 - Filter transaksi berdasarkan rentang tanggal, status, dan metode pembayaran.
 - Cetak ulang struk transaksi dan pembatalan (*void*) dengan pengembalian stok otomatis.
 - Fitur ekspor laporan transaksi ke format spreadsheet CSV.
 
-### 8. 🧭 Desain Navigasi Responsif & Modern
+### 8. Desain Navigasi Responsif & Modern
 - **Desktop Sidebar:** Navigasi vertikal tetap (*sticky sidebar*) elegan bernuansa *dark slate* lengkap dengan logo toko, identitas akun, role badge, dan pengelompokan menu rapi.
 - **Mobile Drawer & Topbar:** Bilah navigasi ramping khusus perangkat layar kecil dengan drawer slide-over yang mulus.
 - **Mobile Bottom Bar:** Navigasi bawah satu jempol (*bottom bar*) untuk akses cepat ke menu utama saat menggunakan tablet atau smartphone.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Bagian | Teknologi |
 |---|---|
@@ -93,7 +93,7 @@ Aplikasi memisahkan antarmuka dan hak akses secara ketat antara **Administrator*
 
 ---
 
-## 📁 Struktur Direktori
+## Struktur Direktori
 
 ```text
 Sistem-kasir/
@@ -149,7 +149,7 @@ Sistem-kasir/
 
 ---
 
-## 🔑 Akun Default Sistem
+## Kredensial Akun Default
 
 Setelah menjalankan seeder database, Anda dapat langsung login menggunakan akun default berikut:
 
@@ -160,7 +160,7 @@ Setelah menjalankan seeder database, Anda dapat langsung login menggunakan akun 
 
 ---
 
-## 🚀 Panduan Menjalankan Aplikasi
+## Panduan Menjalankan Aplikasi
 
 ### 1. Setup Backend (Laravel)
 
@@ -190,7 +190,7 @@ Akses aplikasi melalui browser di: `http://localhost:3000`
 
 ---
 
-## 📡 Ringkasan Endpoint API
+## Ringkasan Endpoint API
 
 ### Autentikasi & Profil Toko (Publik / Auth)
 - `POST /api/login` — Autentikasi pengguna & pengembalian token Sanctum serta data role.
@@ -226,6 +226,6 @@ Akses aplikasi melalui browser di: `http://localhost:3000`
 
 ---
 
-## 📄 Lisensi
+## Lisensi
 
 Project ini dikembangkan untuk kebutuhan operasional point of sales dan bebas dikembangkan lebih lanjut.

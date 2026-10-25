@@ -4,7 +4,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
         <div class="flex items-center gap-2">
-          <span class="text-2xl">⚙️</span>
+          <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
           <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             Pengaturan Toko & Struk
           </h1>
@@ -54,7 +54,7 @@
       v-if="!isAdmin"
       class="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-xs sm:text-sm text-rose-800 flex items-center gap-3 shadow-sm"
     >
-      <span class="text-xl">⛔</span>
+      <span class="text-xs font-bold uppercase text-rose-600">Tolak</span>
       <div>
         <p class="font-bold">Akses Terbatas</p>
         <p>Halaman ini hanya dapat diubah oleh Administrator sistem kasir.</p>
@@ -69,7 +69,7 @@
         <div class="rounded-3xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm">
           <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100">
             <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 font-bold text-lg">
-              🏪
+              
             </div>
             <div>
               <h2 class="text-base font-bold text-slate-800">Identitas & Kontak Toko</h2>
@@ -85,7 +85,7 @@
               </label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                  🏪
+                  
                 </span>
                 <input
                   v-model="form.nama_toko"
@@ -108,7 +108,7 @@
               </label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                  📞
+                  
                 </span>
                 <input
                   v-model="form.telepon"
@@ -143,7 +143,7 @@
               </label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                  🧾
+                  
                 </span>
                 <input
                   v-model="form.footer_struk"
@@ -164,7 +164,7 @@
         <div class="rounded-3xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm">
           <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100">
             <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 font-bold text-lg">
-              🖼️
+              
             </div>
             <div>
               <h2 class="text-base font-bold text-slate-800">Logo Toko / Usaha</h2>
@@ -183,7 +183,7 @@
                   class="h-full w-full object-contain rounded-xl"
                 />
                 <div v-else class="text-center text-slate-400">
-                  <span class="text-3xl block">🛒</span>
+                  <span class="text-sm font-bold uppercase text-slate-400 block">POS</span>
                   <span class="text-[10px] font-medium">Belum Ada Logo</span>
                 </div>
 
@@ -242,7 +242,7 @@
         <div class="sticky top-6 space-y-4">
           <div class="flex items-center justify-between px-1">
             <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <span>🧾</span>
+              <span></span>
               <span>Pratinjau Struk Belanja Kasir</span>
             </h3>
             <span class="rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-200">
@@ -262,7 +262,7 @@
                 <div v-if="form.logo" class="flex justify-center mb-2">
                   <img :src="form.logo" alt="Logo Struk" class="h-12 w-12 object-contain" />
                 </div>
-                <div v-else class="text-xl mb-1">🛒</div>
+                <div v-else class="text-xs font-bold uppercase text-slate-400 mb-1">POS</div>
 
                 <h4 class="text-base font-extrabold text-slate-900 tracking-tight font-sans uppercase">
                   {{ form.nama_toko || 'NAMA TOKO ANDA' }}

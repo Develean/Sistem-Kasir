@@ -49,7 +49,7 @@
         :class="mobileActiveTab === 'katalog' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-slate-600 hover:text-slate-900'"
         class="flex items-center justify-center gap-1.5 rounded-xl py-2.5 transition"
       >
-        <span>📦 Katalog ({{ tampilBarang.length }})</span>
+        <span>Katalog ({{ tampilBarang.length }})</span>
       </button>
       <button
         type="button"
@@ -57,7 +57,7 @@
         :class="mobileActiveTab === 'keranjang' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-slate-600 hover:text-slate-900'"
         class="relative flex items-center justify-center gap-1.5 rounded-xl py-2.5 transition"
       >
-        <span>🛒 Keranjang ({{ totalItemQty }})</span>
+        <span>Keranjang ({{ totalItemQty }})</span>
         <span v-if="keranjang.length > 0" class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
       </button>
     </div>
@@ -106,8 +106,8 @@
                 v-model="filterStok"
                 class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white"
               >
-                <option value="all">📦 Semua Produk Ready</option>
-                <option value="low">⚠️ Stok Menipis (1 - 5 unit)</option>
+                <option value="all">Semua Produk Ready</option>
+                <option value="low">Stok Menipis (1 - 5 unit)</option>
               </select>
             </div>
 
@@ -117,12 +117,12 @@
                 v-model="sortBy"
                 class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white"
               >
-                <option value="nama_asc">🔤 Nama (A - Z)</option>
-                <option value="nama_desc">🔤 Nama (Z - A)</option>
-                <option value="harga_asc">💵 Harga Termurah</option>
-                <option value="harga_desc">💰 Harga Termahal</option>
-                <option value="stok_desc">📊 Stok Terbanyak</option>
-                <option value="stok_asc">📉 Stok Tersedikit</option>
+                <option value="nama_asc">Nama (A - Z)</option>
+                <option value="nama_desc">Nama (Z - A)</option>
+                <option value="harga_asc">Harga Termurah</option>
+                <option value="harga_desc">Harga Termahal</option>
+                <option value="stok_desc">Stok Terbanyak</option>
+                <option value="stok_asc">Stok Tersedikit</option>
               </select>
             </div>
           </div>
@@ -137,7 +137,7 @@
               :class="selectedCategory === cat ? 'bg-indigo-600 text-white font-bold shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
               class="rounded-full px-3 py-1.5 whitespace-nowrap transition text-xs shrink-0 active:scale-95"
             >
-              {{ cat === 'all' ? '✨ Semua Kategori' : cat }}
+              {{ cat === 'all' ? 'Semua Kategori' : cat }}
             </button>
 
             <!-- Reset Filter Button jika ada filter aktif -->
@@ -323,7 +323,7 @@
                   :class="paymentMethod === 'tunai' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold ring-2 ring-indigo-200' : 'border-slate-200 bg-slate-50 text-slate-700 font-medium'"
                   class="flex items-center justify-center gap-1.5 rounded-xl border p-3 text-xs transition"
                 >
-                  <span>💵 Tunai (Cash)</span>
+                  <span>Tunai (Cash)</span>
                 </button>
                 <button
                   type="button"
@@ -331,7 +331,7 @@
                   :class="paymentMethod === 'midtrans' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold ring-2 ring-indigo-200' : 'border-slate-200 bg-slate-50 text-slate-700 font-medium'"
                   class="flex items-center justify-center gap-1.5 rounded-xl border p-3 text-xs transition"
                 >
-                  <span class="text-amber-500 font-extrabold text-sm">⚡</span>
+                  <span class="text-amber-500 font-extrabold text-xs uppercase tracking-wider">Gateway</span>
                   <span>Midtrans Gateway</span>
                 </button>
               </div>
@@ -417,7 +417,7 @@
             :disabled="isSubmitting || !statusBayarValid || totalTagihan === 0"
             class="mt-4 w-full rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
           >
-            {{ isSubmitting ? 'Memproses Transaksi...' : (paymentMethod === 'midtrans' ? '⚡ Buka Pembayaran Midtrans Snap' : 'Proses Pembayaran & Cetak Struk') }}
+            {{ isSubmitting ? 'Memproses Transaksi...' : (paymentMethod === 'midtrans' ? 'Buka Pembayaran Midtrans Snap' : 'Proses Pembayaran & Cetak Struk') }}
           </button>
         </div>
       </aside>
@@ -521,7 +521,7 @@
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <div class="flex items-center gap-2.5">
             <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 text-lg font-bold">
-              ⚡
+              
             </div>
             <div>
               <h3 class="text-base font-bold text-slate-900">Menunggu Pembayaran</h3>
@@ -570,7 +570,7 @@
             :disabled="isSimulating"
             class="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-sm hover:bg-emerald-500 transition active:scale-[0.99] disabled:opacity-50"
           >
-            <span>✓</span>
+            <span>OK</span>
             <span>{{ isSimulating ? 'Memproses Simulasi...' : 'Simulasi Pembayaran Berhasil (Sandbox Demo)' }}</span>
           </button>
 
@@ -665,7 +665,7 @@
             @click="cetakStrukBrowser"
             class="flex-1 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-bold text-white hover:bg-indigo-500"
           >
-            🖨️ Cetak Ulang Struk
+            Cetak Ulang Struk
           </button>
           <button
             @click="showStruk = false"
@@ -1214,7 +1214,7 @@ const handleSnapSuccess = async (trx) => {
   bayar.value = 0
   diskonNominal.value = 0
   namaPelanggan.value = 'Pelanggan Umum'
-  showToast('✓ Pembayaran Midtrans Berhasil Diverifikasi!', 'success')
+  showToast('Pembayaran Midtrans Berhasil Diverifikasi.', 'success')
 
   await loadBarang()
 

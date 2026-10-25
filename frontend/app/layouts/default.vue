@@ -21,7 +21,7 @@
               v-else
               class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-indigo-500/20 text-xl shadow-inner border border-indigo-500/30"
             >
-              🛒
+              <svg class="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
             </div>
             <div class="min-w-0">
               <h1 class="text-sm xl:text-base font-extrabold tracking-tight text-white leading-tight truncate">
@@ -82,7 +82,7 @@
                 :class="route.path === '/dashboard' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-bold' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
                 class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs xl:text-sm font-medium transition group"
               >
-                <span class="text-lg">📈</span>
+                <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
                 <span class="flex-1">Dashboard</span>
                 <span v-if="route.path === '/dashboard'" class="h-1.5 w-1.5 rounded-full bg-white"></span>
               </NuxtLink>
@@ -94,7 +94,7 @@
                 :class="route.path === '/kasir' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-bold' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
                 class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs xl:text-sm font-medium transition group"
               >
-                <span class="text-lg">🛒</span>
+                <span class="text-lg"><svg class="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg></span>
                 <span class="flex-1">Halaman Kasir</span>
                 <span v-if="route.path === '/kasir'" class="h-1.5 w-1.5 rounded-full bg-white"></span>
               </NuxtLink>
@@ -105,7 +105,7 @@
                 :class="route.path === '/barang' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-bold' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
                 class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs xl:text-sm font-medium transition group"
               >
-                <span class="text-lg">📦</span>
+                <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                 <span class="flex-1">Kelola Barang</span>
                 <span v-if="route.path === '/barang'" class="h-1.5 w-1.5 rounded-full bg-white"></span>
               </NuxtLink>
@@ -116,7 +116,7 @@
                 :class="route.path === '/riwayat' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-bold' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
                 class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs xl:text-sm font-medium transition group"
               >
-                <span class="text-lg">📜</span>
+                <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                 <span class="flex-1">Riwayat Transaksi</span>
                 <span v-if="route.path === '/riwayat'" class="h-1.5 w-1.5 rounded-full bg-white"></span>
               </NuxtLink>
@@ -135,7 +135,7 @@
                 :class="route.path === '/activity' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-bold' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
                 class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs xl:text-sm font-medium transition group"
               >
-                <span class="text-lg">📊</span>
+                <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
                 <span class="flex-1">Activity User</span>
                 <span class="rounded bg-indigo-400/20 px-1.5 py-0.2 text-[9px] font-bold text-indigo-300 uppercase">Admin</span>
               </NuxtLink>
@@ -146,7 +146,7 @@
                 :class="route.path === '/users' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-bold' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
                 class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs xl:text-sm font-medium transition group"
               >
-                <span class="text-lg">👥</span>
+                <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                 <span class="flex-1">Kelola Pengguna</span>
                 <span class="rounded bg-indigo-400/20 px-1.5 py-0.2 text-[9px] font-bold text-indigo-300 uppercase">Admin</span>
               </NuxtLink>
@@ -157,7 +157,7 @@
                 :class="route.path === '/settings' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-bold' : 'text-slate-300 hover:bg-white/10 hover:text-white'"
                 class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs xl:text-sm font-medium transition group"
               >
-                <span class="text-lg">⚙️</span>
+                <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 <span class="flex-1">Pengaturan Toko</span>
                 <span class="rounded bg-indigo-400/20 px-1.5 py-0.2 text-[9px] font-bold text-indigo-300 uppercase">Admin</span>
               </NuxtLink>
@@ -203,7 +203,7 @@
             alt="Logo Toko"
             class="h-7 w-7 rounded-lg object-cover bg-white"
           />
-          <span v-else class="text-xl">🛒</span>
+          <span v-else class="text-xl"><svg class="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg></span>
           <div>
             <h1 class="text-sm font-bold leading-tight truncate max-w-[140px] sm:max-w-xs">{{ namaToko }}</h1>
             <p class="text-[9px] text-indigo-300">Point of Sales</p>
@@ -255,7 +255,7 @@
                 alt="Logo Toko"
                 class="h-8 w-8 rounded-xl object-cover bg-white"
               />
-              <span v-else class="text-2xl">🛒</span>
+              <span v-else class="text-2xl"><svg class="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg></span>
               <div>
                 <h2 class="text-sm font-bold text-white truncate max-w-[150px]">{{ namaToko }}</h2>
                 <p class="text-[10px] text-indigo-300">Menu Navigasi</p>
@@ -290,7 +290,7 @@
               :class="route.path === '/dashboard' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-300 hover:bg-white/10'"
               class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition"
             >
-              <span class="text-lg">📈</span>
+              <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
               <span>Dashboard</span>
             </NuxtLink>
 
@@ -301,7 +301,7 @@
               :class="route.path === '/kasir' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-300 hover:bg-white/10'"
               class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition"
             >
-              <span class="text-lg">🛒</span>
+              <span class="text-lg"><svg class="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg></span>
               <span>Halaman Kasir</span>
             </NuxtLink>
 
@@ -311,7 +311,7 @@
               :class="route.path === '/barang' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-300 hover:bg-white/10'"
               class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition"
             >
-              <span class="text-lg">📦</span>
+              <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
               <span>Kelola Barang</span>
             </NuxtLink>
 
@@ -321,7 +321,7 @@
               :class="route.path === '/riwayat' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-300 hover:bg-white/10'"
               class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition"
             >
-              <span class="text-lg">📜</span>
+              <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
               <span>Riwayat Transaksi</span>
             </NuxtLink>
 
@@ -333,7 +333,7 @@
                 :class="route.path === '/activity' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-300 hover:bg-white/10'"
                 class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition"
               >
-                <span class="text-lg">📊</span>
+                <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
                 <span>Activity User</span>
               </NuxtLink>
 
@@ -343,7 +343,7 @@
                 :class="route.path === '/users' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-300 hover:bg-white/10'"
                 class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition"
               >
-                <span class="text-lg">👥</span>
+                <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                 <span>Kelola Pengguna</span>
               </NuxtLink>
 
@@ -353,7 +353,7 @@
                 :class="route.path === '/settings' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-300 hover:bg-white/10'"
                 class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition"
               >
-                <span class="text-lg">⚙️</span>
+                <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 <span>Pengaturan Toko</span>
               </NuxtLink>
             </div>
@@ -405,7 +405,7 @@
               alt="Logo"
               class="h-6 w-6 rounded-lg object-cover bg-white border border-slate-200"
             />
-            <span v-else class="text-base">🛒</span>
+            <span v-else class="text-base"><svg class="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg></span>
             <span class="text-xs font-extrabold text-slate-800 tracking-tight">{{ namaToko }}</span>
           </div>
         </div>
@@ -444,7 +444,7 @@
         :class="route.path === '/kasir' ? 'text-indigo-400 font-bold' : 'text-slate-400 font-medium hover:text-slate-200'"
         class="flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition relative"
       >
-        <span class="text-lg">🛒</span>
+        <span class="text-lg"><svg class="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg></span>
         <span>Kasir</span>
         <span v-if="route.path === '/kasir'" class="absolute -bottom-1 h-1 w-5 rounded-full bg-indigo-500"></span>
       </NuxtLink>
@@ -455,7 +455,7 @@
         :class="route.path === '/dashboard' ? 'text-indigo-400 font-bold' : 'text-slate-400 font-medium hover:text-slate-200'"
         class="flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition relative"
       >
-        <span class="text-lg">📈</span>
+        <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
         <span>Dashboard</span>
         <span v-if="route.path === '/dashboard'" class="absolute -bottom-1 h-1 w-5 rounded-full bg-indigo-500"></span>
       </NuxtLink>
@@ -466,7 +466,7 @@
         :class="route.path === '/barang' ? 'text-indigo-400 font-bold' : 'text-slate-400 font-medium hover:text-slate-200'"
         class="flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition relative"
       >
-        <span class="text-lg">📦</span>
+        <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
         <span>Barang</span>
         <span v-if="route.path === '/barang'" class="absolute -bottom-1 h-1 w-5 rounded-full bg-indigo-500"></span>
       </NuxtLink>
@@ -477,7 +477,7 @@
         :class="route.path === '/riwayat' ? 'text-indigo-400 font-bold' : 'text-slate-400 font-medium hover:text-slate-200'"
         class="flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition relative"
       >
-        <span class="text-lg">📜</span>
+        <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
         <span>Riwayat</span>
         <span v-if="route.path === '/riwayat'" class="absolute -bottom-1 h-1 w-5 rounded-full bg-indigo-500"></span>
       </NuxtLink>
@@ -489,7 +489,7 @@
         :class="route.path === '/activity' ? 'text-indigo-400 font-bold' : 'text-slate-400 font-medium hover:text-slate-200'"
         class="flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition relative"
       >
-        <span class="text-lg">📊</span>
+        <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
         <span>Activity</span>
         <span v-if="route.path === '/activity'" class="absolute -bottom-1 h-1 w-5 rounded-full bg-indigo-500"></span>
       </NuxtLink>
@@ -501,7 +501,7 @@
         :class="route.path === '/users' ? 'text-indigo-400 font-bold' : 'text-slate-400 font-medium hover:text-slate-200'"
         class="flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition relative"
       >
-        <span class="text-lg">👥</span>
+        <svg class="h-5 w-5 opacity-80 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
         <span>Users</span>
         <span v-if="route.path === '/users'" class="absolute -bottom-1 h-1 w-5 rounded-full bg-indigo-500"></span>
       </NuxtLink>

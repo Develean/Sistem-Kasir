@@ -6,7 +6,7 @@
           <div>
             <div class="mb-4 sm:mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs sm:text-sm text-slate-200">
               <img v-if="logoToko" :src="logoToko" alt="Logo" class="h-5 w-5 rounded object-cover bg-white" />
-              <span v-else class="text-base sm:text-lg">🛒</span>
+              <span v-else class="text-xs font-bold uppercase text-indigo-400">POS</span>
               <span>Sistem Kasir {{ namaToko }}</span>
             </div>
             <h1 class="text-xl sm:text-3xl font-bold leading-tight tracking-tight">Kelola transaksi kasir dengan cepat, akurat, dan aman.</h1>
@@ -19,13 +19,13 @@
             <p class="text-xs sm:text-sm font-semibold text-slate-100">Fitur Unggulan POS</p>
             <ul class="mt-2 space-y-1.5 text-xs text-slate-300">
               <li class="flex items-center gap-2">
-                <span class="text-emerald-400">✓</span> Autentikasi aman dengan Laravel Sanctum
+                <span class="text-emerald-400 font-bold">+</span> Autentikasi aman dengan Laravel Sanctum
               </li>
               <li class="flex items-center gap-2">
-                <span class="text-emerald-400">✓</span> Pengelolaan stok barang & harga modal (HPP)
+                <span class="text-emerald-400 font-bold">+</span> Pengelolaan stok barang & harga modal (HPP)
               </li>
               <li class="flex items-center gap-2">
-                <span class="text-emerald-400">✓</span> Integrasi Midtrans Gateway (QRIS, VA, E-Wallet)
+                <span class="text-emerald-400 font-bold">+</span> Integrasi Midtrans Gateway (QRIS, VA, E-Wallet)
               </li>
             </ul>
           </div>

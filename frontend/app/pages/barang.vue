@@ -49,7 +49,7 @@
             @click="bukaBulkModal"
             class="rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-500 active:scale-95 flex items-center gap-1.5"
           >
-            <span>📑 Tambah Massal / Import</span>
+            <span> Tambah Massal / Import</span>
           </button>
           <button
             type="button"
@@ -147,7 +147,7 @@
               placeholder="Cari kode atau nama barang..."
               class="w-full rounded-xl border border-slate-300 bg-slate-50 py-2.5 pl-3 pr-8 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-100"
             />
-            <span class="absolute right-2.5 top-2.5 text-slate-400">🔍</span>
+            <span class="absolute right-2.5 top-2.5 text-slate-400"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
           </div>
 
           <!-- Filter Kategori Dropdown -->
@@ -156,7 +156,7 @@
               v-model="filterKategori"
               class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white"
             >
-              <option value="all">📁 Semua Kategori</option>
+              <option value="all">Semua Kategori</option>
               <option v-for="kat in kategoriList" :key="kat" :value="kat">{{ kat }}</option>
             </select>
           </div>
@@ -167,10 +167,10 @@
               v-model="filterStok"
               class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white"
             >
-              <option value="all">📦 Semua Stok Fisik</option>
-              <option value="safe">✓ Stok Aman (> 5 unit)</option>
-              <option value="low">⚠️ Stok Menipis (≤ 5 unit)</option>
-              <option value="empty">❌ Stok Habis (0 unit)</option>
+              <option value="all">Semua Stok Fisik</option>
+              <option value="safe">Stok Aman (> 5 unit)</option>
+              <option value="low">Stok Menipis (≤ 5 unit)</option>
+              <option value="empty">Stok Habis (0 unit)</option>
             </select>
           </div>
 
@@ -180,14 +180,14 @@
               v-model="sortBy"
               class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none transition focus:border-indigo-500 focus:bg-white"
             >
-              <option value="nama_asc">🔤 Nama (A - Z)</option>
-              <option value="nama_desc">🔤 Nama (Z - A)</option>
-              <option value="harga_asc">💵 Harga Jual Termurah</option>
-              <option value="harga_desc">💰 Harga Jual Termahal</option>
-              <option value="modal_desc">🏷️ Modal Terbesar</option>
-              <option value="margin_desc">📈 Margin Laba Tertinggi</option>
-              <option value="stok_desc">📊 Stok Terbanyak</option>
-              <option value="stok_asc">📉 Stok Paling Sedikit</option>
+              <option value="nama_asc">Nama (A - Z)</option>
+              <option value="nama_desc">Nama (Z - A)</option>
+              <option value="harga_asc">Harga Jual Termurah</option>
+              <option value="harga_desc">Harga Jual Termahal</option>
+              <option value="modal_desc">Modal Terbesar</option>
+              <option value="margin_desc">Margin Laba Tertinggi</option>
+              <option value="stok_desc">Stok Terbanyak</option>
+              <option value="stok_asc">Stok Paling Sedikit</option>
             </select>
           </div>
         </div>
@@ -199,7 +199,7 @@
             :class="filterKategori === 'all' ? 'bg-indigo-600 text-white font-bold shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
             class="rounded-full px-3 py-1.5 whitespace-nowrap transition text-xs shrink-0 active:scale-95"
           >
-            ✨ Semua ({{ barangList.length }})
+            Semua ({{ barangList.length }})
           </button>
           <button
             v-for="kat in kategoriList"
@@ -460,7 +460,7 @@
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <div class="flex items-center gap-2.5">
             <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 text-lg font-bold">
-              📑
+              
             </div>
             <div>
               <h3 class="text-base sm:text-lg font-bold text-slate-900">Tambah Banyak Barang Sekaligus</h3>
@@ -483,7 +483,7 @@
             :class="bulkTab === 'tabel' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-slate-600 hover:text-slate-900'"
             class="flex-1 py-2 rounded-xl transition flex items-center justify-center gap-1.5"
           >
-            <span>📝 Formulir Multi-Baris ({{ bulkRows.length }} baris)</span>
+            <span>Formulir Multi-Baris ({{ bulkRows.length }} baris)</span>
           </button>
           <button
             type="button"
@@ -491,7 +491,7 @@
             :class="bulkTab === 'csv' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-slate-600 hover:text-slate-900'"
             class="flex-1 py-2 rounded-xl transition flex items-center justify-center gap-1.5"
           >
-            <span>📊 Import CSV / Salin Spreadsheet</span>
+            <span>Import CSV / Salin Spreadsheet</span>
           </button>
         </div>
 
@@ -599,7 +599,7 @@
                         class="rounded p-1 text-slate-400 hover:text-rose-600 disabled:opacity-30"
                         title="Hapus baris"
                       >
-                        🗑️
+                        Hapus
                       </button>
                     </td>
                   </tr>
@@ -623,7 +623,7 @@
                   @click="downloadTemplateCsv"
                   class="rounded-xl border border-indigo-200 bg-white px-3 py-1.5 text-xs font-bold text-indigo-700 hover:bg-indigo-50 shadow-xs flex items-center gap-1.5 shrink-0"
                 >
-                  <span>📥 Unduh Template CSV</span>
+                  <span>Unduh Template CSV</span>
                 </button>
               </div>
             </div>

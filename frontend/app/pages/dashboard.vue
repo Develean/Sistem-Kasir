@@ -21,7 +21,7 @@
             :disabled="isLoading"
             class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 active:scale-95 disabled:opacity-50"
           >
-            <span :class="isLoading ? 'animate-spin' : ''">🔄</span>
+            <svg :class="isLoading ? 'animate-spin' : ''" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             <span>{{ isLoading ? 'Memperbarui...' : 'Segarkan Data' }}</span>
           </button>
 
@@ -43,7 +43,7 @@
         <div class="flex items-center justify-between">
           <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Omzet Hari Ini</span>
           <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 font-bold text-base">
-            💰
+            
           </div>
         </div>
         <div class="mt-3">
@@ -69,7 +69,7 @@
         <div class="flex items-center justify-between">
           <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Omzet Bulan Ini</span>
           <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 font-bold text-base">
-            📈
+            
           </div>
         </div>
         <div class="mt-3">
@@ -95,7 +95,7 @@
         <div class="flex items-center justify-between">
           <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Jumlah Transaksi</span>
           <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 font-bold text-base">
-            🛒
+            
           </div>
         </div>
         <div class="mt-3">
@@ -121,7 +121,7 @@
             :class="(stats.stok?.total_kritis || 0) > 0 ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'"
             class="flex h-9 w-9 items-center justify-center rounded-xl font-bold text-base"
           >
-            {{ (stats.stok?.total_kritis || 0) > 0 ? '⚠️' : '✅' }}
+            {{ (stats.stok?.total_kritis || 0) > 0 ? 'Perlu Restock' : 'Aman' }}
           </div>
         </div>
         <div class="mt-3">
@@ -279,7 +279,7 @@
               {{ formatRupiah(hoveredBar.omzet) }}
             </p>
             <p class="text-[10px] text-amber-300 font-semibold mt-0.5">
-              🛒 {{ hoveredBar.transaksi }} Transaksi
+              {{ hoveredBar.transaksi }} Transaksi
             </p>
           </div>
         </div>
@@ -311,13 +311,13 @@
 
     <!-- 2 Kolom: Produk Terlaris & Stok Kritis -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Kolom 1: 🏆 Produk Terlaris -->
+      <!-- Kolom 1: Produk Terlaris -->
       <div class="rounded-2xl sm:rounded-[26px] border border-slate-200/80 bg-white p-4 sm:p-6 shadow-sm flex flex-col justify-between">
         <div>
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-2">
               <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-600 font-bold">
-                🏆
+                
               </span>
               <div>
                 <h3 class="text-base font-bold text-slate-900">5 Produk Terlaris</h3>
@@ -378,7 +378,7 @@
 
           <!-- Empty State Produk Terlaris -->
           <div v-else class="py-10 text-center text-slate-400">
-            <p class="text-3xl mb-1">🛒</p>
+            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">POS</p>
             <p class="text-xs font-medium">Belum ada data barang yang terjual dari transaksi kasir.</p>
           </div>
         </div>
@@ -389,7 +389,7 @@
         </div>
       </div>
 
-      <!-- Kolom 2: ⚠️ Peringatan Stok Kritis -->
+      <!-- Kolom 2: Peringatan Stok Kritis -->
       <div class="rounded-2xl sm:rounded-[26px] border border-slate-200/80 bg-white p-4 sm:p-6 shadow-sm flex flex-col justify-between">
         <div>
           <div class="flex items-center justify-between mb-4">
@@ -398,7 +398,7 @@
                 :class="(stats.stok?.total_kritis || 0) > 0 ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'"
                 class="flex h-8 w-8 items-center justify-center rounded-xl font-bold"
               >
-                {{ (stats.stok?.total_kritis || 0) > 0 ? '⚠️' : '✅' }}
+                {{ (stats.stok?.total_kritis || 0) > 0 ? 'Perlu Restock' : 'Aman' }}
               </span>
               <div>
                 <h3 class="text-base font-bold text-slate-900">Peringatan Stok Kritis</h3>
@@ -453,7 +453,7 @@
 
           <!-- Empty State Stok Kritis (Semua stok cukup) -->
           <div v-else class="py-10 text-center text-slate-400">
-            <p class="text-3xl mb-1">🎉</p>
+            
             <p class="text-xs font-semibold text-emerald-600">Semua stok barang dalam kondisi aman!</p>
             <p class="text-[11px] text-slate-400 mt-0.5">Tidak ada barang dengan stok di bawah atau sama dengan 5.</p>
           </div>
@@ -637,11 +637,11 @@ const getRankBadgeClass = (index) => {
 
 const getMetodeIcon = (metode) => {
   switch (String(metode).toLowerCase()) {
-    case 'tunai': return '💵'
-    case 'qris': return '📱'
-    case 'midtrans': return '💳'
-    case 'transfer': return '🏦'
-    default: return '💳'
+    case 'tunai': return 'Tunai'
+    case 'qris': return 'QRIS'
+    case 'midtrans': return 'Midtrans'
+    case 'transfer': return 'Transfer'
+    default: return 'Digital'
   }
 }
 
